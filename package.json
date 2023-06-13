@@ -1,0 +1,19 @@
+{
+  "name": "blockregistry",
+  "version": "1.0.0",
+  "description": "a secure registry for property to prevent forgery",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaifJ/fullstack_open_project.git"
+  },
+  "author": "kaif shahahusen jamadar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaifJ/fullstack_open_project/issues"
+  },
+  "homepage": "https://github.com/kaifJ/fullstack_open_project#readme"
+}
