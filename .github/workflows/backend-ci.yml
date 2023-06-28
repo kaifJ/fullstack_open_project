@@ -11,6 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    env:
+      PORT: ${{secrets.PORT}}
+      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
 
     steps:
       - name: Checkout repository
