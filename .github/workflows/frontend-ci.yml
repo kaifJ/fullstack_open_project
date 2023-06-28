@@ -35,4 +35,4 @@ jobs:
           cd frontend
           npm run build
           npm run start & sleep 5
-          npm run cypress:run
+          npm run cypress:open
