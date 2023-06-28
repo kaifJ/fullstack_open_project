@@ -10,7 +10,6 @@ const userRouter = require('./controllers/users')
 const app = express()
 
 const mongoUrl = config.MONGODB_URI
-console.log(mongoUrl)
 mongoose.connect(mongoUrl).then(() => {
     console.log('connected to MongoDB')
 }).catch((error) => {

@@ -11,7 +11,6 @@ let userSchema = new mongoose.Schema({
     passwordHash: {
         type: String,
         required: true,
-        minLength: 8,
     },
     email: {
         type: String,
