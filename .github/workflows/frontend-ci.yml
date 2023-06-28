@@ -37,4 +37,3 @@ jobs:
           start: cd frontend && npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
-          cypress-command: npm run cypress:open
