@@ -33,7 +33,8 @@ jobs:
       - name: Cypress Tests
         uses: cypress-io/github-action@v5
         with:
-          build: cd frontend && npm run build
-          start: cd frontend && npm run start
+          working-directory: frontend
+          build: npm run build
+          start: npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
