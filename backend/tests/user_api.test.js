@@ -10,7 +10,7 @@ describe('User route testing', () => {
     beforeEach(async () => {
         await User.deleteMany({})
         await insertUsers()
-    })
+    }, 10000)
 
     test('test initial number of users', async () => {
         const users = await usersInDb()
