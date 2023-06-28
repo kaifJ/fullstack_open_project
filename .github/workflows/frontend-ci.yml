@@ -30,8 +30,8 @@ jobs:
       - name: Unit Tests
         run: cd frontend && npm run test
 
-      - name: Cypress Tests
-        uses: cypress-io/github-action@v2
+      - name: e2e tests
+        uses: cypress-io/github-action@v4
         with:
           build: cd frontend && npm run build
           start: cd frontend && npm run start
