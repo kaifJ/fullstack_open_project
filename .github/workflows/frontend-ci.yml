@@ -31,8 +31,10 @@ jobs:
         run: cd frontend && npm run test
 
       - name: Cypress Tests
-        run: |
-          cd frontend
-          npm run build
-          npm run start & sleep 5
-          npm run cypress:open
+        uses: cypress-io/github-action@v4
+        with:
+          build: cd frontend && npm run build
+          start: cd frontend && npm run start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 60
+          cypress-command: npm run cypress:open
