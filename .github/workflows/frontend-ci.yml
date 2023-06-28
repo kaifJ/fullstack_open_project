@@ -31,7 +31,7 @@ jobs:
         run: cd frontend && npm run test
 
       - name: Cypress Tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           build: cd frontend && npm run build
           start: cd frontend && npm run start
