@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -23,3 +24,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', ({ email, password }) => {
+    cy.request('POST', 'http://localhost:3001/api/login', {
+        email, password
+    }).then(({ body }) => {
+        localStorage.setItem('jwtToken', body.token)
+    })
+})
