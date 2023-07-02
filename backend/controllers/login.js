@@ -6,14 +6,12 @@ const config = require('../utils/config')
 
 loginRouter.post('/', async (request, response) => {
     const body = request.body
-    // const emailQuery = body.email ? { email: body.email } : {}
-    // const usernameQuery = body.username ? { username: body.username } : null
-
-    // const user = await User.findOne({ $or: [emailQuery, usernameQuery] })
-
+    console.log(body)
     const user = body.email ?
         await User.findOne({ email: body.email }) :
         await User.findOne({ username: body.username })
+
+    console.log(user)
 
     const isPasswordCorrect = user === null ? false : await bcrypt.compare(body.password, user.passwordHash)
     if(!isPasswordCorrect || !user) {
