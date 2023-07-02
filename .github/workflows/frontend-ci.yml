@@ -38,15 +38,18 @@ jobs:
         working-directory: backend
         run: npm ci  
       
-      - name: Run backend server
-        working-directory: backend
-        run: npm run test:server
+      # - name: Run backend server
+      #   working-directory: backend
+      #   run: npm run test:server
 
       - name: Cypress Tests
         uses: cypress-io/github-action@v5
         with:
           working-directory: frontend
           build: npm run build
-          start: npm run start
+          start: |
+            cd ../backend && npm run test:server &
+            sleep 10
+            cd ../frontend && npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
