@@ -30,6 +30,10 @@ jobs:
       - name: Unit Tests
         run: cd frontend && npm run test
 
+      - name: Run backend server
+        run: npm run dev
+        working-directory: backend
+
       - name: Cypress Tests
         uses: cypress-io/github-action@v5
         with:
