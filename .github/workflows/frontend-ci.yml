@@ -36,7 +36,7 @@ jobs:
       
       - name: Run backend server
         working-directory: backend
-        run: npm run dev
+        run: npm run test:server
 
       - name: Cypress Tests
         uses: cypress-io/github-action@v5

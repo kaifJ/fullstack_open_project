@@ -7,6 +7,7 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test:server": "cross=env NODE_ENV=test nodemon index.js",
     "lint": "eslint ."
   },
   "author": "kaif shahahusen jamadar",
