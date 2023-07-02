@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 
 require('express-async-errors')
 
-const userRouter = require('./controllers/users')
+const { userRouter, loginRouter } = require('./controllers/index')
 
 const app = express()
 
@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', userRouter)
+app.use('/api/login', loginRouter)
 
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {

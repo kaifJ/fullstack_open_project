@@ -24,7 +24,7 @@ describe('User route testing', () => {
             passwordHash: 'Password@123',
             email: 'root@gmail.com'
         }
-        const response = await api.post('/api/users').send(newUser).expect(400)
+        await api.post('/api/users').send(newUser).expect(400)
     })
 
     test('duplicate username not allowed', async () => {
@@ -46,7 +46,7 @@ describe('User route testing', () => {
             email: 'asdf@gmail.com'
         }
 
-        const response = await api.post('/api/users').send(newUser).expect(400)
+        await api.post('/api/users').send(newUser).expect(400)
     })
 
     test('username is required', async () => {
@@ -56,7 +56,7 @@ describe('User route testing', () => {
             email: 'asdf@gmail.com'
         }
 
-        const response = await api.post('/api/users').send(newUser).expect(400)
+        await api.post('/api/users').send(newUser).expect(400)
     })
 
 })
