@@ -42,6 +42,10 @@ jobs:
       #   working-directory: backend
       #   run: npm run test:server
 
+      - name: Wait for backend server to start
+        run: sleep 10
+
+
       - name: Cypress Tests
         uses: cypress-io/github-action@v5
         with:
