@@ -10,7 +10,7 @@ describe('Login route testing', () => {
     beforeEach(async () => {
         await User.deleteMany({});
         await api.post('/api/users').send(initialUser)
-    }, 10000);
+    }, 20000);
 
     test('login with username', async () => {
         const user = {

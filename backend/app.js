@@ -16,15 +16,8 @@ mongoose.connect(mongoUrl).then(() => {
     console.log('error connecting to MongoDB:', error.message)
 })
 
-
 app.use(cors())
 app.use(express.json())
-
-config.MONGODB_URI
-
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
 
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
