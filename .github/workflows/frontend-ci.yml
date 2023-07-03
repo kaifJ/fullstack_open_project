@@ -38,9 +38,9 @@ jobs:
         working-directory: backend
         run: npm ci  
       
-      # - name: Run backend server
-      #   working-directory: backend
-      #   run: npm run test:server
+      - name: Run backend server
+        working-directory: backend
+        run: npm run test:server
 
       - name: Wait for backend server to start
         run: sleep 10
@@ -51,9 +51,6 @@ jobs:
         with:
           working-directory: frontend
           build: npm run build
-          start: |
-            cd ../backend && npm run test:server &
-            sleep 10
-            cd ../frontend && npm run start
+          start: npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
