@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      FRONTEND_PORT: 3000
       PORT: ${{secrets.PORT}}
       TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
 
@@ -51,6 +52,6 @@ jobs:
         with:
           working-directory: frontend
           build: npm run build
-          start: npm run start
+          start: PORT=3000 npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
