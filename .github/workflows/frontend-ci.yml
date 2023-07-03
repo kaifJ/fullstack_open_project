@@ -52,6 +52,6 @@ jobs:
         with:
           working-directory: frontend
           build: npm run build
-          start: PORT=${{ env.FRONTEND_PORT }} npm run start
+          start: npm run start
           wait-on: "http://localhost:${{ env.FRONTEND_PORT }}"
           wait-on-timeout: 60
