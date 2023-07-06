@@ -24,6 +24,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import { ROOT_USER } from '../e2e/Constants'
+
+Cypress.Commands.add('createUser', () => {
+    cy.request('POST', 'http://localhost:3001/api/users', ROOT_USER)
+})
+
+Cypress.Commands.add('deleteUser', () => {
+    cy.request('DELETE', `http://localhost:3001/api/users/${ROOT_USER._id}`)
+})
+
+Cypress.Commands.add('setup', () => {
+    cy.deleteUser().as('deleteUser')
+    cy.get('@deleteUser').then(() => cy.createUser())
+})
 
 Cypress.Commands.add('login', ({ email, password }) => {
     cy.request('POST', 'http://localhost:3001/api/login', {
