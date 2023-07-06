@@ -27,6 +27,9 @@ userRouter.post('/', async (request, response) => {
         passwordHash,
         email: body.email
     })
+
+    if(process.env.NODE_ENV === 'test') user['_id'] = body['_id']
+
     const savedUser = await user.save()
     response.json(savedUser)
 })
@@ -39,6 +42,11 @@ userRouter.get('/', async (request, response) => {
 userRouter.delete('/:id', async (request, response) => {
     const id = request.params.id
     await User.findByIdAndRemove(id)
+    response.status(204).end()
+})
+
+userRouter.delete('/:id', async (request, response) => {
+    await User.findByIdAndRemove(request.params.id)
     response.status(204).end()
 })
 
