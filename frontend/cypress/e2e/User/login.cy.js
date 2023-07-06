@@ -12,4 +12,10 @@ describe('Login', () => {
         cy.contains('Dashboard')
     })
 
+    it('Unsuccessful login', () => {
+        cy.get('input[placeholder="Email"]').type('something@gmail.com')
+        cy.get('input[placeholder="Password"]').type('something')
+        cy.get('button[type="submit"]').click()
+        cy.contains('Invalid email or password')
+    })
 })

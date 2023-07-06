@@ -9,7 +9,7 @@ const Login = () => {
     const navigate = useNavigate()
     const [errorMessage, setErrorMessage] = React.useState('')
 
-    const handleSubmit = (values, { setSubmitting }) => {
+    const handleSubmit = (values, { setSubmitting, resetForm }) => {
         loginService.login(values)
             .then(res => {
                 localStorage.setItem('token', res.token)
@@ -18,6 +18,7 @@ const Login = () => {
             })
             .catch(err => {
                 setErrorMessage(err.response.data.error)
+                resetForm()
                 setTimeout(() => {
                     setErrorMessage('')
                 }, 3000)
