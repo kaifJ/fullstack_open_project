@@ -1,10 +1,12 @@
+/* eslint-disable no-undef */
 import axios from 'axios'
-import env from 'react-dotenv'
 
-const baseUrl = env.BASE_URL ? `${env.BASE_URL}/api/register` :  '/api/register'
+const baseUrl = process.env.NODE_ENV === 'development' ?
+    'http://localhost:3001/api/users' :
+    '/api/users'
 
 const register = async (body) => {
-    const { username, name, email, password } = body
+    const { username, name='', email, password } = body
     const response = await axios.post(baseUrl, {
         username,
         name,

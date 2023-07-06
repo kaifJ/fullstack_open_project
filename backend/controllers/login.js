@@ -14,7 +14,7 @@ loginRouter.post('/', async (request, response) => {
 
     if(!isPasswordCorrect || !user) {
         return response.status(401).json({
-            error: 'Invalid email/username or password'
+            error: 'Invalid Email or password'
         })
     }
 

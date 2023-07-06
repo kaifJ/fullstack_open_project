@@ -3,9 +3,11 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import loginValidationSchema from './loginValidationSchema'
 import loginService from '../../services/login'
 import { useNavigate } from 'react-router-dom'
+import Toast from '../Toast'
 
 const Login = () => {
     const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = React.useState('')
 
     const handleSubmit = (values, { setSubmitting }) => {
         loginService.login(values)
@@ -15,10 +17,10 @@ const Login = () => {
                 setSubmitting(false)
             })
             .catch(err => {
-                // set email and password field as empty
-                // diplay notificaiton
-                // make notification component
-                console.log(err)
+                setErrorMessage(err.response.data.error)
+                setTimeout(() => {
+                    setErrorMessage('')
+                }, 3000)
                 setSubmitting(false)
             })
     }
@@ -29,6 +31,7 @@ const Login = () => {
 
     return (
         <div className='login--container'>
+            {errorMessage && <Toast message={errorMessage} /> }
             <h1 className='login--container__label'>Login</h1>
             <Formik
                 initialValues={{ email: '', password: '' }}
@@ -36,7 +39,7 @@ const Login = () => {
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className="login--form__container">
                         <div>
                             <ErrorMessage className='error--message' name="email" component="div" />
                             <Field

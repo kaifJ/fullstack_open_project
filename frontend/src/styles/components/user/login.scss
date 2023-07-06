@@ -14,6 +14,10 @@
   color: $white;
 }
 
+.login--form__container {
+  width: 20%;
+}
+
 .required {
   color: $red;
 }
@@ -26,7 +30,7 @@
 
 .login-button {
   display: block;
-  width: 110%;
+  width: 105%;
   padding: 1rem;
   font-size: $m-size;
   font-weight: bold;
@@ -49,7 +53,7 @@
 
 .register-button {
   display: block;
-  width: 110%;
+  width: 105%;
   padding: 1rem;
   margin-top: $s-size;
   font-size: $m-size;

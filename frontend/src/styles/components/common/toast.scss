@@ -1,0 +1,8 @@
+@mixin dynamic-message-color($color) {
+  color: $color;
+}
+
+.MuiSnackbarContent-message {
+  font-size: $m-size;
+  @include dynamic-message-color(var(--message-color));
+}
