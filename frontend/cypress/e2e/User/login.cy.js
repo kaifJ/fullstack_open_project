@@ -16,6 +16,6 @@ describe('Login', () => {
         cy.get('input[placeholder="Email"]').type('something@gmail.com')
         cy.get('input[placeholder="Password"]').type('something')
         cy.get('button[type="submit"]').click()
-        cy.contains('Invalid email or password')
+        cy.contains('Invalid Email or password')
     })
 })
