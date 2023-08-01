@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/PropertyOwnership.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.8;\n\ncontract PropertyOwnership {\n    address private contractOwner;\n    uint256 private nextPropertyId;\n\n    mapping(uint256 => address) private propertyOwners;\n    mapping(uint256 => uint256) private propertyPrices;\n\n    event PropertyAdded(uint256 indexed propertyId, uint256 price);\n    event OwnershipTransferred(\n        uint256 indexed propertyId,\n        address indexed previousOwner,\n        address indexed newOwner\n    );\n    event OwnershipTransferRequested(\n        uint256 indexed propertyId,\n        address indexed requester,\n        uint256 price\n    );\n\n    constructor() {\n        contractOwner = msg.sender;\n        nextPropertyId = 1;\n    }\n\n    modifier onlyContractOwner() {\n        require(\n            msg.sender == contractOwner,\n            \"Only the contract owner can perform this action\"\n        );\n        _;\n    }\n\n    function addProperty(uint256 price) public onlyContractOwner {\n        propertyOwners[nextPropertyId] = contractOwner;\n        propertyPrices[nextPropertyId] = price;\n\n        emit PropertyAdded(nextPropertyId, price);\n\n        nextPropertyId++;\n    }\n\n    function getOwner(uint256 propertyId) public view returns (address) {\n        return propertyOwners[propertyId];\n    }\n\n    function getPrice(uint256 propertyId) public view returns (uint256) {\n        return propertyPrices[propertyId];\n    }\n\n    function requestOwnershipTransfer(\n        uint256 propertyId,\n        uint256 price\n    ) public payable {\n        require(propertyOwners[propertyId] != address(0), \"Invalid propertyId\");\n        require(\n            propertyOwners[propertyId] != msg.sender,\n            \"You are already the owner\"\n        );\n        require(propertyPrices[propertyId] == price, \"Invalid price\");\n        require(msg.value == price, \"Please send the correct amount of Ether\");\n\n        emit OwnershipTransferRequested(propertyId, msg.sender, price);\n    }\n\n    function approveOwnershipTransfer(\n        uint256 propertyId,\n        address newOwner\n    ) public {\n        require(\n            propertyOwners[propertyId] == msg.sender,\n            \"Only the current owner can approve the transfer\"\n        );\n        require(\n            propertyOwners[propertyId] != newOwner,\n            \"You are already the owner\"\n        );\n\n        propertyOwners[propertyId] = newOwner;\n\n        uint256 price = propertyPrices[propertyId];\n        propertyPrices[propertyId] = 0; // Set price to 0 after transfer to avoid reentrancy attacks\n        payable(msg.sender).transfer(price); // Transfer the payment to the previous owner\n\n        emit OwnershipTransferred(propertyId, msg.sender, newOwner);\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
