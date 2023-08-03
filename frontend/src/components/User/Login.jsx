@@ -12,7 +12,7 @@ const Login = () => {
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
         loginService.login(values)
             .then(res => {
-                localStorage.setItem('token', res.token)
+                localStorage.setItem('jwtToken', res.token)
                 navigate('/')
                 setSubmitting(false)
             })
