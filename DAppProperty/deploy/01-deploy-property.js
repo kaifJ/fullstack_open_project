@@ -14,10 +14,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         waitConfirmations: network.config.blockConfirmations || 1,
     });
 
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-        log("Contract deployed at " + property.address);
-        log('Verifying contract at ' + property.address);
-        await verify(property.address);
-    }
+    console.log("PropertyOwnership deployed to: ", property.address);
+
+    // if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+    //     log("Contract deployed at " + property.address);
+    //     log('Verifying contract at ' + property.address);
+    //     await verify(property.address);
+    // }
 }
 module.exports.tags = ["property"];

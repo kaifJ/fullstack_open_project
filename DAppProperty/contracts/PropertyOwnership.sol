@@ -146,6 +146,7 @@ contract PropertyOwnership {
 
         propertyOwners[propertyId] = newOwner; // Update the ownership after the payment is successful
 
+        delete transferRequests[propertyId];
         emit OwnershipTransferred(propertyId, msg.sender, newOwner);
     }
 

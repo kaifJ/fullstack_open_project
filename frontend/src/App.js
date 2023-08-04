@@ -1,7 +1,7 @@
 import React from 'react'
 import Register from './components/User/Register'
 import Login from './components/User/Login'
-import Dashboard from './components/Dashboard/dashboard'
+import Dashboard from './components/Dashboard'
 import Loading from './components/Loading'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 
@@ -12,7 +12,7 @@ const App = () => {
 
     React.useEffect(() => {
         const token = localStorage.getItem('jwtToken')
-        if(token)
+        if (token)
             navigate('/')
         else
             navigate('/login')
@@ -21,7 +21,7 @@ const App = () => {
 
     }, [])
 
-    if(loading) return <Loading />
+    if (loading) return <Loading />
 
     return (
         <Routes>
