@@ -1,26 +1,17 @@
 import { useEffect, useState } from 'react'
 import Header from './Header'
 import PropertyList from './PropertyList'
-import { contractAddresses, abi } from '../constants'
-import { useMoralis, useWeb3Contract } from 'react-moralis'
+import { useMoralis } from 'react-moralis'
 import PropertyForm from './PropertyForm'
 import { Modal, Box } from '@mui/material'
+import { GetContractOwner } from '../contractServices/index.js'
 
 const Dashboard = () => {
-    const { isWeb3Enabled, chainId: chainIdHex, account } = useMoralis()
+    const { isWeb3Enabled, account } = useMoralis()
     const [ownerAddress, setOwnerAddress] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const chainId = parseInt(chainIdHex)
-    const propertyAddress =
-        chainId in contractAddresses ? contractAddresses[chainId][0] : null
-
-    const { runContractFunction: getContractOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: propertyAddress,
-        functionName: 'getContractOwner',
-        params: {},
-    })
+    const getContractOwner = GetContractOwner()
 
     useEffect(() => {
         if (isWeb3Enabled) {
@@ -35,7 +26,6 @@ const Dashboard = () => {
     return (
         <div>
             <Header />
-            <PropertyList />
             {account &&
                 ownerAddress &&
                 account.toLowerCase() === ownerAddress && (
@@ -43,6 +33,7 @@ const Dashboard = () => {
                         Add Property
                 </button>
             )}
+            <PropertyList />
             {isModalOpen && (
                 <Modal open={isModalOpen} onClose={handleClose}>
                     <Box

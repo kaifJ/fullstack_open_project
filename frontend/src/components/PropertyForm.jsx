@@ -1,21 +1,27 @@
 import { useState } from 'react'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
-import AddProperty from '../contractServices/AddProperty'
+import { Formik, Form, ErrorMessage } from 'formik'
+import { AddProperty } from '../contractServices/index.js'
 import PriceField from './PriceField'
+import Notification from './Notificaiton'
 
 const PropertyForm = ({ handleClose }) => {
     const [price, setPrice] = useState('')
     const addProperty = AddProperty(price)
 
+    const { handleSuccess, handleFailure } = Notification()
+
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const result = await addProperty()
-            alert(JSON.stringify(result))
+            await addProperty({
+                onSuccess: handleSuccess,
+                onError: handleFailure,
+            })
             setSubmitting(false)
-            handleClose()
         }    catch (err) {
             alert(err)
             setSubmitting(false)
+        } finally {
+            handleClose()
         }
     }
 
