@@ -6,6 +6,7 @@ import GetPendingRequest from './GetPendingRequest'
 import RequestTransfer from './RequestTransfer'
 import ApproveTransferRequest from './ApproveTransferRequest'
 import GetPropertyOwner from './GetPropertyOwner'
+import GetNextPropertyId from './GetNextPropertyId'
 
 export {
     AddProperty,
@@ -15,5 +16,6 @@ export {
     GetPendingRequest,
     RequestTransfer,
     GetPropertyOwner,
+    GetNextPropertyId,
     ApproveTransferRequest,
 }

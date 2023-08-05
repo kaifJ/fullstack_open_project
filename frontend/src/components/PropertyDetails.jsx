@@ -84,7 +84,7 @@ const PropertyDetails = ({ property }) => {
                     <Typography variant="body2">
                         {property.propertyId.toString()}
                     </Typography>
-                    {account?.toLowerCase() !== ownerAddress?.toLowerCase() &&
+                    {isWeb3Enabled && account?.toLowerCase() !== ownerAddress?.toLowerCase() &&
                         propertyOwner !== account?.toLowerCase() &&
                         !pendingRequest && (
                             <Button
@@ -95,7 +95,7 @@ const PropertyDetails = ({ property }) => {
                                 Request Transfer
                             </Button>
                         )}
-                    {(pendingRequest?.requester?.toLowerCase() ===
+                    {isWeb3Enabled && (pendingRequest?.requester?.toLowerCase() ===
                         account?.toLowerCase() ||
                         (pendingRequest &&
                             account.toLowerCase() ===
@@ -121,9 +121,6 @@ const PropertyDetails = ({ property }) => {
                         )}
                 </CardContent>
             </Card>
-            {/* <h1>{property.owner}</h1>
-            <p>{property.price.toString()}</p>
-            <p>{property.propertyId.toString()}</p> */}
         </div>
     )
 }
