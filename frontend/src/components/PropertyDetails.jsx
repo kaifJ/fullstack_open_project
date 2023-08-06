@@ -11,6 +11,7 @@ import {
     CancelTransferRequest,
     ApproveTransferRequest,
 } from '../contractServices/index.js'
+import propertyServices from '../services/property'
 
 const PropertyDetails = ({ property }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -18,6 +19,8 @@ const PropertyDetails = ({ property }) => {
     const [pendingRequest, setPendingRequest] = useState(false)
     const [propertyOwner, setPropertyOwner] = useState('')
     const { handleSuccess, handleFailure } = Notification()
+    const [propertyDetails, setPropertyDetails] = useState({})
+    const [loading, setLoading] = useState(false)
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -33,6 +36,13 @@ const PropertyDetails = ({ property }) => {
     )
 
     useEffect(() => {
+        propertyServices
+            .getPropertyById(property.propertyId.toString())
+            .then((_propertyDetails) => {
+                setPropertyDetails(_propertyDetails)
+                setLoading(false)
+            })
+
         if (isWeb3Enabled) {
             getContractOwner().then((ownerAddress) => {
                 setOwnerAddress(ownerAddress.toLowerCase())
@@ -70,21 +80,40 @@ const PropertyDetails = ({ property }) => {
         })
     }
 
-    return (
+    return loading ? (
+        <div>Loading...</div>
+    ) : (
         <div style={{ marginTop: '10px' }}>
             <Card>
-                {/* <CardMedia></CardMedia> */}
+                <Typography variant="h5" component="div">
+                    {propertyDetails?.title}
+                </Typography>
+                {propertyDetails?.images?.map((image, index) => (
+                    <CardMedia
+                        key={index}
+                        component="img"
+                        height="200"
+                        image={image.path}
+                        alt={`Image ${index + 1}`}
+                        style={{ objectFit: 'cover', width: '33%' }}
+                    />
+                ))}
                 <CardContent>
                     <Typography variant="h5" component="div">
                         {property.owner}
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                        {propertyDetails?.description}
                     </Typography>
                     <Typography variant="body2">
                         {property.price.toString()}
                     </Typography>
                     <Typography variant="body2">
-                        {property.propertyId.toString()}
+                        {propertyDetails?.address}
                     </Typography>
-                    {isWeb3Enabled && account?.toLowerCase() !== ownerAddress?.toLowerCase() &&
+                    {isWeb3Enabled &&
+                        account?.toLowerCase() !==
+                            ownerAddress?.toLowerCase() &&
                         propertyOwner !== account?.toLowerCase() &&
                         !pendingRequest && (
                             <Button
@@ -95,19 +124,20 @@ const PropertyDetails = ({ property }) => {
                                 Request Transfer
                             </Button>
                         )}
-                    {isWeb3Enabled && (pendingRequest?.requester?.toLowerCase() ===
-                        account?.toLowerCase() ||
-                        (pendingRequest &&
-                            account.toLowerCase() ===
-                                ownerAddress.toLowerCase())) && (
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={handleCancelTransferRequest}
-                        >
-                            Cancel Transfer Request
-                        </Button>
-                    )}
+                    {isWeb3Enabled &&
+                        (pendingRequest?.requester?.toLowerCase() ===
+                            account?.toLowerCase() ||
+                            (pendingRequest &&
+                                account.toLowerCase() ===
+                                    ownerAddress.toLowerCase())) && (
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={handleCancelTransferRequest}
+                            >
+                                Cancel Transfer Request
+                            </Button>
+                        )}
                     {pendingRequest &&
                         account.toLowerCase() ===
                             ownerAddress.toLowerCase() && (

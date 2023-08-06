@@ -31,7 +31,7 @@ const PropertyForm = ({ handleClose }) => {
     const handleImageChange = (event) => {
         const files = event.target.files
         const imageArray = [...images]
-        for (let i = 0; i < files.length && i < 3; i++) {
+        for (let i = 0; i < files.length && i < 2; i++) {
             imageArray.push(files[i])
         }
         setImages(imageArray)
@@ -52,7 +52,7 @@ const PropertyForm = ({ handleClose }) => {
             for (let i = 0; i < images.length; i++) {
                 formData.append('images', images[i])
             }
-            // await propertyService.create(formData)
+            await propertyService.createProperty(formData)
             await addProperty({
                 onSuccess: handleSuccess,
                 onError: handleFailure,
@@ -122,8 +122,8 @@ const PropertyForm = ({ handleClose }) => {
                     {/* <label htmlFor="image">Images:</label> */}
                     <input
                         type="file"
-                        name="image"
-                        id="image"
+                        name="images"
+                        id="images"
                         accept="image/*"
                         multiple
                         onChange={handleImageChange}

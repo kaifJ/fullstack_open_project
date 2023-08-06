@@ -8,10 +8,15 @@ const baseUrl = process.env.NODE_ENV === 'development' ?
 const createProperty = async (formData) => {
     const response = await axios.post(baseUrl, formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
         }
     })
     return response.data
 }
 
-export default { createProperty }
+const getPropertyById = async (id) => {
+    const response = await axios.get(`${baseUrl}/${id}`)
+    return response.data
+}
+
+export default { createProperty, getPropertyById }
