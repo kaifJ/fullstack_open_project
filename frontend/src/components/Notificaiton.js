@@ -1,10 +1,14 @@
 import { useNotification } from 'web3uikit'
+import { useContext } from 'react'
+import { DispatchContext } from './Dashboard'
 
 const Notification = () => {
     const dispatch = useNotification()
+    const stateDispatch = useContext(DispatchContext)
 
     const handleSuccess = async (tx) => {
         await tx.wait(1)
+        stateDispatch({ type: 'dispatched' })
         handleNotification()
     }
 
