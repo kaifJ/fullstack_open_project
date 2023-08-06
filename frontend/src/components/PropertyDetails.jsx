@@ -81,6 +81,8 @@ const PropertyDetails = ({ property }) => {
             getPropertyOwner().then((propertyOwner) => {
                 setPropertyOwner(propertyOwner.toLowerCase())
             })
+
+            dispatch({ type: 'reset' })
         }
     }, [state?.dispatched])
 
@@ -110,15 +112,15 @@ const PropertyDetails = ({ property }) => {
     ) : (
         <div style={{ marginTop: '10px' }}>
             <Card>
-                <Typography variant="h4" component="div">
+                <Typography variant='h4' component='div'>
                     {propertyDetails?.title}
                 </Typography>
                 {propertyDetails?.images?.length ? (
                     propertyDetails?.images?.map((image, index) => (
                         <CardMedia
                             key={index}
-                            component="img"
-                            height="180"
+                            component='img'
+                            height='180'
                             image={image.path || '/uploads/default.png'}
                             alt={`Image ${index + 1}`}
                             style={{ objectFit: 'cover', width: '25%' }}
@@ -127,32 +129,32 @@ const PropertyDetails = ({ property }) => {
                 ) : (
                     <CardMedia
                         key={`default~1`}
-                        component="img"
-                        height="20%"
+                        component='img'
+                        height='20%'
                         image={'/uploads/default.png'}
                         alt={`Default Image`}
                         style={{ objectFit: 'cover', width: '20%' }}
                     />
                 )}
                 <CardContent>
-                    <Typography variant="h5" component="div">
+                    <Typography variant='h5' component='div'>
                         {property.owner}
                     </Typography>
-                    <Typography variant="h5" component="div">
+                    <Typography variant='h5' component='div'>
                         {propertyDetails?.description}
                     </Typography>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Typography variant="h5">
+                        <Typography variant='h5'>
                             Wei: {property.price.toString()}  
                         </Typography>
-                        <Typography variant="h5">
+                        <Typography variant='h5'>
                             Ethers:{' '}
                             {web3.utils.fromWei(
                                 property.price.toString(),
                                 'ether'
                             )}  
                         </Typography>
-                        <Typography variant="h5">
+                        <Typography variant='h5'>
                             USD:{' '}
                             {(ethPrice *
                                 web3.utils.fromWei(
@@ -161,7 +163,7 @@ const PropertyDetails = ({ property }) => {
                                 )).toFixed(4)}
                         </Typography>
                     </div>
-                    <Typography variant="h5">
+                    <Typography variant='h5'>
                         {propertyDetails?.address}
                     </Typography>
                     {isWeb3Enabled &&
@@ -170,8 +172,8 @@ const PropertyDetails = ({ property }) => {
                         propertyOwner !== account?.toLowerCase() &&
                         !pendingRequest && (
                             <Button
-                                variant="contained"
-                                color="primary"
+                                variant='contained'
+                                color='primary'
                                 onClick={handleRequestTransfer}
                             >
                                 Request Transfer
@@ -184,8 +186,8 @@ const PropertyDetails = ({ property }) => {
                                 account.toLowerCase() ===
                                     ownerAddress.toLowerCase())) && (
                             <Button
-                                variant="contained"
-                                color="error"
+                                variant='contained'
+                                color='error'
                                 onClick={handleCancelTransferRequest}
                             >
                                 Cancel Transfer Request
@@ -195,8 +197,8 @@ const PropertyDetails = ({ property }) => {
                         account.toLowerCase() ===
                             ownerAddress.toLowerCase() && (
                             <Button
-                                variant="contained"
-                                color="success"
+                                variant='contained'
+                                color='success'
                                 onClick={handleApproveTransferRequest}
                             >
                                 Approve Transfer
