@@ -1,11 +1,18 @@
 import { useMoralis } from 'react-moralis'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { StateContext, DispatchContext } from './Dashboard'
 import PropertyDetails from './PropertyDetails'
 import { GetAllProperties } from '../contractServices/index.js'
+import { Button } from '@mui/material'
+import KeyboardArrowLeftRounded from '@mui/icons-material/KeyboardArrowLeftRounded'
+import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded'
 
 export default function LotteryEntrance() {
     const { isWeb3Enabled } = useMoralis()
+    const state = useContext(StateContext)
+    const dispatch = useContext(DispatchContext)
 
+    const [page, setPage] = useState(1)
     const [properties, setProperties] = useState([])
 
     const getAllProperties = GetAllProperties()
@@ -13,6 +20,7 @@ export default function LotteryEntrance() {
     async function updateUIValues() {
         const properties = await getAllProperties()
         setProperties(properties)
+        dispatch && dispatch({ type: 'reset' })
     }
 
     useEffect(() => {
@@ -21,14 +29,34 @@ export default function LotteryEntrance() {
         }
     }, [isWeb3Enabled])
 
+    useEffect(() => {
+        if (state?.dispatched) {
+            updateUIValues()
+        }
+    }, [state?.dispatched])
+
     return (
         <div>
-            {properties.map((property) => (
+            {properties.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails
                     key={`${property.propertyId.toString()}~${property.price.toString()}`}
                     property={property}
                 />
             ))}
+            <div>
+                <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
+                    {' '}
+                    <KeyboardArrowLeftRounded />{' '}
+                </Button>
+                <span>{page}</span>
+                <Button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === Math.ceil(properties.length / 3)}
+                >
+                    {' '}
+                    <KeyboardArrowRightRounded />{' '}
+                </Button>
+            </div>
         </div>
     )
 }

@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
+import web3 from 'web3'
+import { StateContext, DispatchContext } from './Dashboard'
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
 import { ZERO_ADDRESS } from '../utils/Constants'
 import Notification from './Notificaiton'
@@ -12,6 +14,7 @@ import {
     ApproveTransferRequest,
 } from '../contractServices/index.js'
 import propertyServices from '../services/property'
+import ethToUsd from '../services/ethToUsd'
 
 const PropertyDetails = ({ property }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -21,6 +24,7 @@ const PropertyDetails = ({ property }) => {
     const { handleSuccess, handleFailure } = Notification()
     const [propertyDetails, setPropertyDetails] = useState({})
     const [loading, setLoading] = useState(false)
+    const [ethPrice, setEthPrice] = useState(0)
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -35,6 +39,9 @@ const PropertyDetails = ({ property }) => {
         property.price.toString()
     )
 
+    const state = useContext(StateContext)
+    const dispatch = useContext(DispatchContext)
+
     useEffect(() => {
         propertyServices
             .getPropertyById(property.propertyId.toString())
@@ -42,6 +49,10 @@ const PropertyDetails = ({ property }) => {
                 setPropertyDetails(_propertyDetails)
                 setLoading(false)
             })
+
+        ethToUsd().then((price) => {
+            setEthPrice(price)
+        })
 
         if (isWeb3Enabled) {
             getContractOwner().then((ownerAddress) => {
@@ -58,6 +69,20 @@ const PropertyDetails = ({ property }) => {
             })
         }
     }, [isWeb3Enabled])
+
+    useEffect(() => {
+        if (state?.dispatched) {
+            getPendingRequest().then((pendingRequest) => {
+                const zeroAddress = ZERO_ADDRESS.toLowerCase()
+                if (pendingRequest.requester.toLowerCase() === zeroAddress)
+                    setPendingRequest(false)
+                else setPendingRequest(pendingRequest)
+            })
+            getPropertyOwner().then((propertyOwner) => {
+                setPropertyOwner(propertyOwner.toLowerCase())
+            })
+        }
+    }, [state?.dispatched])
 
     const handleRequestTransfer = () => {
         requestTransfer({
@@ -85,19 +110,30 @@ const PropertyDetails = ({ property }) => {
     ) : (
         <div style={{ marginTop: '10px' }}>
             <Card>
-                <Typography variant="h5" component="div">
+                <Typography variant="h4" component="div">
                     {propertyDetails?.title}
                 </Typography>
-                {propertyDetails?.images?.map((image, index) => (
+                {propertyDetails?.images?.length ? (
+                    propertyDetails?.images?.map((image, index) => (
+                        <CardMedia
+                            key={index}
+                            component="img"
+                            height="180"
+                            image={image.path || '/uploads/default.png'}
+                            alt={`Image ${index + 1}`}
+                            style={{ objectFit: 'cover', width: '25%' }}
+                        />
+                    ))
+                ) : (
                     <CardMedia
-                        key={index}
+                        key={`default~1`}
                         component="img"
-                        height="200"
-                        image={image.path}
-                        alt={`Image ${index + 1}`}
-                        style={{ objectFit: 'cover', width: '33%' }}
+                        height="20%"
+                        image={'/uploads/default.png'}
+                        alt={`Default Image`}
+                        style={{ objectFit: 'cover', width: '20%' }}
                     />
-                ))}
+                )}
                 <CardContent>
                     <Typography variant="h5" component="div">
                         {property.owner}
@@ -105,10 +141,27 @@ const PropertyDetails = ({ property }) => {
                     <Typography variant="h5" component="div">
                         {propertyDetails?.description}
                     </Typography>
-                    <Typography variant="body2">
-                        {property.price.toString()}
-                    </Typography>
-                    <Typography variant="body2">
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <Typography variant="h5">
+                            Wei: {property.price.toString()}  
+                        </Typography>
+                        <Typography variant="h5">
+                            Ethers:{' '}
+                            {web3.utils.fromWei(
+                                property.price.toString(),
+                                'ether'
+                            )}  
+                        </Typography>
+                        <Typography variant="h5">
+                            USD:{' '}
+                            {(ethPrice *
+                                web3.utils.fromWei(
+                                    property.price.toString(),
+                                    'ether'
+                                )).toFixed(4)}
+                        </Typography>
+                    </div>
+                    <Typography variant="h5">
                         {propertyDetails?.address}
                     </Typography>
                     {isWeb3Enabled &&

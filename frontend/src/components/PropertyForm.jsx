@@ -3,6 +3,7 @@ import { AddProperty, GetNextPropertyId } from '../contractServices/index.js'
 import Notification from './Notificaiton'
 import { useMoralis } from 'react-moralis'
 import propertyService from '../services/property'
+import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
 const PropertyForm = ({ handleClose }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -15,6 +16,7 @@ const PropertyForm = ({ handleClose }) => {
         description: '',
         address: '',
     })
+    const [errors, setErrors] = useState({})
 
     const addProperty = AddProperty(formValues.price)
 
@@ -41,6 +43,17 @@ const PropertyForm = ({ handleClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        try {
+            await propertyFormValidation.validate(formValues,  { abortEarly: false })
+            setErrors({})
+        } catch (validationErrors) {
+            const errors = {}
+            validationErrors.inner.forEach((error) => {
+                errors[error.path] = error.message
+            })
+            setErrors(errors)
+        }
+
         try {
             const formData = new FormData()
             formData.append('title', formValues.title)
@@ -77,49 +90,59 @@ const PropertyForm = ({ handleClose }) => {
             <form onSubmit={handleSubmit}>
                 <div>
                     {/* <label htmlFor="title">Title:</label> */}
+                    {errors.title && <span>{errors.title}</span>}
                     <input
                         type="text"
                         id="title"
                         name="title"
-                        placeholder="Title"
+                        placeholder="Title *"
                         value={formValues.title}
                         onChange={handleChange}
+                        required
                     />
+
                 </div>
                 <div>
                     {/* <label htmlFor="price">Price:</label> */}
+                    {errors.price && <span>{errors.price}</span>}
                     <input
                         type="text"
                         id="price"
                         name="price"
-                        placeholder="Price in wei"
+                        required
+                        placeholder="Price in wei *"
                         value={formValues.price}
                         onChange={handleChange}
                     />
                 </div>
                 <div>
                     {/* <label htmlFor="description">Description:</label> */}
+                    {errors.description && <span>{errors.description}</span>}
                     <textarea
                         name="description"
                         id="description"
-                        placeholder="Description"
+                        required
+                        placeholder="Description *"
                         value={formValues.description}
                         onChange={handleChange}
                     />
                 </div>
                 <div>
                     {/* <label htmlFor="address">Address:</label> */}
+                    {errors.address && <span>{errors.address}</span>}
                     <input
                         type="text"
                         id="address"
                         name="address"
-                        placeholder="Address"
+                        required
+                        placeholder="Address *"
                         value={formValues.address}
                         onChange={handleChange}
                     />
                 </div>
                 <div>
                     {/* <label htmlFor="image">Images:</label> */}
+                    {errors.images && <span>{errors.images}</span>}
                     <input
                         type="file"
                         name="images"
