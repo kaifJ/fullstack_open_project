@@ -2,10 +2,11 @@ const express = require('express')
 const cors = require('cors')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
+const path = require('path')
 
 require('express-async-errors')
 
-const { userRouter, loginRouter } = require('./controllers/index')
+const { userRouter, loginRouter, propertyRouter } = require('./controllers/index')
 
 const app = express()
 
@@ -18,9 +19,12 @@ mongoose.connect(mongoUrl).then(() => {
 
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/property', propertyRouter)
 
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
