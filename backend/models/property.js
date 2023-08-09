@@ -8,8 +8,9 @@ let propertySchema = new mongoose.Schema({
     },
     description: String,
     price: {
-        type: String,
-        required: true,
+        wei: String,
+        eth: String,
+        usd: String
     },
     images: [{ path: String }],
     address: {
