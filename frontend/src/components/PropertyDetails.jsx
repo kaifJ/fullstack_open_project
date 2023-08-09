@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
-import web3 from 'web3'
 import { StateContext, DispatchContext } from './Dashboard'
+import { UsdToEth, ethToWei } from '../utils/priceConversions'
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
 import { ZERO_ADDRESS } from '../utils/Constants'
 import Notification from './Notificaiton'
@@ -14,7 +14,6 @@ import {
     ApproveTransferRequest,
 } from '../contractServices/index.js'
 import propertyServices from '../services/property'
-import ethToUsd from '../services/ethToUsd'
 
 const PropertyDetails = ({ property }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -50,10 +49,6 @@ const PropertyDetails = ({ property }) => {
                 setLoading(false)
             })
 
-        ethToUsd().then((price) => {
-            setEthPrice(price)
-        })
-
         if (isWeb3Enabled) {
             getContractOwner().then((ownerAddress) => {
                 setOwnerAddress(ownerAddress.toLowerCase())
@@ -85,6 +80,14 @@ const PropertyDetails = ({ property }) => {
             dispatch({ type: 'reset' })
         }
     }, [state?.dispatched])
+
+    useEffect(() => {
+        if (property?.price) {
+            UsdToEth(property?.price.toString()).then((eth) => {
+                setEthPrice(eth)
+            })
+        }
+    }, [property?.price])
 
     const handleRequestTransfer = () => {
         requestTransfer({
@@ -145,22 +148,13 @@ const PropertyDetails = ({ property }) => {
                     </Typography>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <Typography variant='h5'>
-                            Wei: {property.price.toString()}  
+                            USD :${property.price.toString()}  
                         </Typography>
                         <Typography variant='h5'>
-                            Ethers:{' '}
-                            {web3.utils.fromWei(
-                                property.price.toString(),
-                                'ether'
-                            )}  
+                            Ethers: {ethPrice} 
                         </Typography>
                         <Typography variant='h5'>
-                            USD:{' '}
-                            {(ethPrice *
-                                web3.utils.fromWei(
-                                    property.price.toString(),
-                                    'ether'
-                                )).toFixed(4)}
+                            Wei : {ethPrice ? ethToWei(ethPrice) : 0}
                         </Typography>
                     </div>
                     <Typography variant='h5'>

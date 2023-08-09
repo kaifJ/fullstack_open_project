@@ -3,6 +3,8 @@ import { AddProperty, GetNextPropertyId } from '../contractServices/index.js'
 import Notification from './Notificaiton'
 import { useMoralis } from 'react-moralis'
 import propertyService from '../services/property'
+import formatPrice from '../utils/priceFormatter.js'
+import { UsdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
 const PropertyForm = ({ handleClose }) => {
@@ -18,7 +20,7 @@ const PropertyForm = ({ handleClose }) => {
     })
     const [errors, setErrors] = useState({})
 
-    const addProperty = AddProperty(formValues.price)
+    const addProperty = AddProperty(parseInt(formValues.price.replace(/[^0-9.]/g, '')))
 
     const getNextPropertyId = GetNextPropertyId()
 
@@ -52,12 +54,21 @@ const PropertyForm = ({ handleClose }) => {
                 errors[error.path] = error.message
             })
             setErrors(errors)
+            return
         }
 
         try {
+            const formattedPrice = `${parseInt(formValues.price.replace(/[^0-9.]/g, ''))}`
+            const eth = await UsdToEth(formattedPrice)
+            const price = {
+                usd: formattedPrice,
+                eth: eth.toString(),
+                wei: ethToWei(eth)
+            }
+
             const formData = new FormData()
             formData.append('title', formValues.title)
-            formData.append('price', formValues.price)
+            formData.append('price', price)
             formData.append('description', formValues.description)
             formData.append('address', formValues.address)
             formData.append('propertyId', nextPropertyId.toString())
@@ -78,11 +89,19 @@ const PropertyForm = ({ handleClose }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
+
         setFormValues((prevValues) => ({
             ...prevValues,
             [name]: value,
         }))
     }
+
+    const handleBlur = () => {
+        if (!formValues.price) return
+        const formattedPrice = formatPrice(formValues.price)
+        setFormValues({ ...formValues, price: formattedPrice })
+    }
+
 
     return (
         <div>
@@ -110,9 +129,10 @@ const PropertyForm = ({ handleClose }) => {
                         id="price"
                         name="price"
                         required
-                        placeholder="Price in wei *"
+                        placeholder="Price in USD *"
                         value={formValues.price}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                     />
                 </div>
                 <div>
