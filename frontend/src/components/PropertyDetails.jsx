@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { StateContext, DispatchContext } from './Dashboard'
 import { UsdToEth, ethToWei } from '../utils/priceConversions'
+import formatPrice from '../utils/priceFormatter'
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
 import { ZERO_ADDRESS } from '../utils/Constants'
 import Notification from './Notificaiton'
@@ -14,6 +15,7 @@ import {
     ApproveTransferRequest,
 } from '../contractServices/index.js'
 import propertyServices from '../services/property'
+import ImageViewer from './ImageViewer'
 
 const PropertyDetails = ({ property }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -24,6 +26,7 @@ const PropertyDetails = ({ property }) => {
     const [propertyDetails, setPropertyDetails] = useState({})
     const [loading, setLoading] = useState(false)
     const [ethPrice, setEthPrice] = useState(0)
+    const [openImageViewer, setOpenImageViewer] = useState(false)
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -37,6 +40,9 @@ const PropertyDetails = ({ property }) => {
         property.propertyId.toString(),
         property.price.toString()
     )
+
+    const handleModalClose = () => setOpenImageViewer(false)
+    const handleImagePress = () => setOpenImageViewer(true)
 
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)
@@ -113,51 +119,96 @@ const PropertyDetails = ({ property }) => {
     return loading ? (
         <div>Loading...</div>
     ) : (
-        <div style={{ marginTop: '10px' }}>
-            <Card>
-                <Typography variant='h4' component='div'>
+        <div
+            className="property-card"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '65%',
+            }}
+        >
+            {propertyDetails?.images && (
+                <ImageViewer
+                    images={propertyDetails?.images}
+                    open={openImageViewer}
+                    onClose={handleModalClose}
+                />
+            )}
+            <Card style={{ width: '100%', marginTop: '20px' }}>
+                <Typography
+                    variant="h4"
+                    component="div"
+                    style={{ marginBottom: '10px' }}
+                >
                     {propertyDetails?.title}
                 </Typography>
-                {propertyDetails?.images?.length ? (
-                    propertyDetails?.images?.map((image, index) => (
-                        <CardMedia
-                            key={index}
-                            component='img'
-                            height='180'
-                            image={image.path || '/uploads/default.png'}
-                            alt={`Image ${index + 1}`}
-                            style={{ objectFit: 'cover', width: '25%' }}
-                        />
-                    ))
-                ) : (
-                    <CardMedia
-                        key={`default~1`}
-                        component='img'
-                        height='20%'
-                        image={'/uploads/default.png'}
-                        alt={`Default Image`}
-                        style={{ objectFit: 'cover', width: '20%' }}
-                    />
-                )}
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    {propertyDetails?.images?.length ? (
+                        propertyDetails?.images?.map((image, index) => (
+                            <div onClick={handleImagePress} className='image-container'>
+                                <CardMedia
+                                    key={index}
+                                    component="img"
+                                    height="180"
+                                    image={image.path || '/uploads/default.png'}
+                                    alt={`Image ${index + 1}`}
+                                    style={{
+                                        objectFit: 'cover',
+                                        width: '100%',
+                                        margin: '5px',
+                                    }}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <div onClick={handleImagePress} className='image-container'>
+                            <CardMedia
+                                key={`default~1`}
+                                component="img"
+                                height="20%"
+                                image={'/uploads/default.png'}
+                                alt={`Default Image`}
+                                style={{
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    margin: '5px',
+                                }}
+                            />
+                        </div>
+                    )}
+                </div>
                 <CardContent>
-                    <Typography variant='h5' component='div'>
+                    <Typography variant="h5" component="div">
+                        <span className="form-label">Owner:</span>{' '}
                         {property.owner}
                     </Typography>
-                    <Typography variant='h5' component='div'>
+                    <Typography variant="h5" component="div">
+                        <span className="form-label">Description:</span>{' '}
                         {propertyDetails?.description}
                     </Typography>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Typography variant='h5'>
-                            USD :${property.price.toString()}  
+                    <div className="details" style={{ margin: '10px 0' }}>
+                        <Typography
+                            variant="h5"
+                            style={{ marginRight: '10px' }}
+                        >
+                            <span className="form-label">USD:</span>{' '}
+                            {formatPrice(property.price.toString())}
                         </Typography>
-                        <Typography variant='h5'>
-                            Ethers: {ethPrice} 
+                        <Typography
+                            variant="h5"
+                            style={{ marginRight: '10px' }}
+                        >
+                            <span className="form-label">Ethers:</span>{' '}
+                            {ethPrice}
                         </Typography>
-                        <Typography variant='h5'>
-                            Wei : {ethPrice ? ethToWei(ethPrice) : 0}
+                        <Typography variant="h5">
+                            <span className="form-label">Wei:</span>{' '}
+                            {ethPrice ? ethToWei(ethPrice) : 0}
                         </Typography>
                     </div>
-                    <Typography variant='h5'>
+                    <Typography variant="h5" style={{ margin: '10px 0' }}>
+                        <span className="form-label">Address:</span>{' '}
                         {propertyDetails?.address}
                     </Typography>
                     {isWeb3Enabled &&
@@ -166,9 +217,13 @@ const PropertyDetails = ({ property }) => {
                         propertyOwner !== account?.toLowerCase() &&
                         !pendingRequest && (
                             <Button
-                                variant='contained'
-                                color='primary'
+                                variant="contained"
+                                color="primary"
                                 onClick={handleRequestTransfer}
+                                style={{
+                                    marginBottom: '10px',
+                                    marginRight: '10px',
+                                }}
                             >
                                 Request Transfer
                             </Button>
@@ -180,9 +235,13 @@ const PropertyDetails = ({ property }) => {
                                 account.toLowerCase() ===
                                     ownerAddress.toLowerCase())) && (
                             <Button
-                                variant='contained'
-                                color='error'
+                                variant="contained"
+                                color="error"
                                 onClick={handleCancelTransferRequest}
+                                style={{
+                                    marginBottom: '10px',
+                                    marginRight: '10px',
+                                }}
                             >
                                 Cancel Transfer Request
                             </Button>
@@ -191,9 +250,13 @@ const PropertyDetails = ({ property }) => {
                         account.toLowerCase() ===
                             ownerAddress.toLowerCase() && (
                             <Button
-                                variant='contained'
-                                color='success'
+                                variant="contained"
+                                color="success"
                                 onClick={handleApproveTransferRequest}
+                                style={{
+                                    marginBottom: '10px',
+                                    marginRight: '10px',
+                                }}
                             >
                                 Approve Transfer
                             </Button>

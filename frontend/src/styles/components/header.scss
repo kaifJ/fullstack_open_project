@@ -1,0 +1,14 @@
+.header--container {
+    background-color: $dark-blue;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 4px;
+}
+
+.header--header1 {
+    color: $white;
+}

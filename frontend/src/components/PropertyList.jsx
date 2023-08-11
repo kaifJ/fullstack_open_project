@@ -36,27 +36,32 @@ export default function LotteryEntrance() {
     }, [state?.dispatched])
 
     return (
-        <div>
+        <div className="property-list--container">
             {properties.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails
                     key={`${property.propertyId.toString()}~${property.price.toString()}`}
                     property={property}
                 />
             ))}
-            <div>
-                <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
-                    {' '}
-                    <KeyboardArrowLeftRounded />{' '}
-                </Button>
-                <span>{page}</span>
-                <Button
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === Math.ceil(properties.length / 3)}
-                >
-                    {' '}
-                    <KeyboardArrowRightRounded />{' '}
-                </Button>
-            </div>
+            {properties.length > 3 && (
+                <div className="page-navigator">
+                    <Button
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        {' '}
+                        <KeyboardArrowLeftRounded style={{fontSize: '20px'}}/>{' '}
+                    </Button>
+                    <span className='page--indicator'>{page}</span>
+                    <Button
+                        onClick={() => setPage(page + 1)}
+                        disabled={page === Math.ceil(properties.length / 3)}
+                    >
+                        {' '}
+                        <KeyboardArrowRightRounded style={{fontSize: '20px'}}/>{' '}
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }
