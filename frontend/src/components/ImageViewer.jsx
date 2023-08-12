@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { Modal, Box } from '@mui/material'
+import { Modal, Box, Button } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
+import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 
 const ImageViewer = ({ images, open, onClose }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -9,9 +12,7 @@ const ImageViewer = ({ images, open, onClose }) => {
     }
 
     const handleNextImage = () => {
-        setCurrentImageIndex((prevIndex) =>
-            Math.min(prevIndex + 1, images.length - 1)
-        )
+        setCurrentImageIndex((prevIndex) => Math.min(prevIndex + 1, images.length - 1))
     }
 
     return (
@@ -25,34 +26,37 @@ const ImageViewer = ({ images, open, onClose }) => {
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
-                    minWidth: '50%',
-                    maxWidth: '80%',
+                    minWidth: '60%',
+                    maxWidth: '90%',
+                    minHeight: '60%',
+                    maxHeight: '90%',
+                    width: '90%',
+                    height: '90%',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
-                <img
-                    src={images[currentImageIndex]['path']}
-                    alt={`Image ${currentImageIndex + 1}`}
-                    height={'100%'}
-                    style={{
-                        objectFit: 'cover',
-                        width: '100%',
-                        margin: '5px',
-                    }}
-                />
-                <div>
-                    <button
-                        onClick={handlePrevImage}
-                        disabled={currentImageIndex === 0}
-                    >
-                        Previous
-                    </button>
-                    <button onClick={onClose}>Close</button>
-                    <button
-                        onClick={handleNextImage}
-                        disabled={currentImageIndex === images.length - 1}
-                    >
-                        Next
-                    </button>
+                <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                    <Button onClick={onClose} startIcon={<CloseIcon style={{ fontSize: '32px' }}/>} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                    <Button onClick={handlePrevImage} disabled={currentImageIndex === 0}>
+                        <ArrowLeftIcon fontSize="large" style={{ fontSize: '64px' }}/>
+                    </Button>
+                    <img
+                        src={images[currentImageIndex]['path']}
+                        alt={`Image ${currentImageIndex + 1}`}
+                        style={{
+                            objectFit: 'cover',
+                            width: '90%',
+                            height: '90%',
+                            margin: '5px',
+                        }}
+                    />
+
+                    <Button onClick={handleNextImage} disabled={currentImageIndex === images.length - 1}>
+                        <ArrowRightIcon fontSize="large" style={{ fontSize: '64px' }}/>
+                    </Button>
                 </div>
             </Box>
         </Modal>

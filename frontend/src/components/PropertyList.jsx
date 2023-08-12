@@ -50,15 +50,19 @@ export default function LotteryEntrance() {
                         disabled={page === 1}
                     >
                         {' '}
-                        <KeyboardArrowLeftRounded style={{fontSize: '20px'}}/>{' '}
+                        <KeyboardArrowLeftRounded
+                            style={{ fontSize: '20px' }}
+                        />{' '}
                     </Button>
-                    <span className='page--indicator'>{page}</span>
+                    <span className="page--indicator">{page}</span>
                     <Button
                         onClick={() => setPage(page + 1)}
                         disabled={page === Math.ceil(properties.length / 3)}
                     >
                         {' '}
-                        <KeyboardArrowRightRounded style={{fontSize: '20px'}}/>{' '}
+                        <KeyboardArrowRightRounded
+                            style={{ fontSize: '20px' }}
+                        />{' '}
                     </Button>
                 </div>
             )}

@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-propertyRouter.post('/', upload.array('images', 2), async (request, response) => {
+propertyRouter.post('/', upload.array('images', 3), async (request, response) => {
     try {
         const { title, price, description, address, propertyId, propertyOwner } = request.body
 

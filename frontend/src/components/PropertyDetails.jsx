@@ -89,10 +89,10 @@ const PropertyDetails = ({ property }) => {
 
     useEffect(() => {
         if (property?.price) {
-           const eth = weiToEth(property.price.toString())
-           ethToUsd(eth).then((usd) => {
+            const eth = weiToEth(property.price.toString())
+            ethToUsd(eth).then((usd) => {
                 setUsdPrice(usd.toString())
-              })
+            })
         }
     }, [property?.price])
 
@@ -147,7 +147,10 @@ const PropertyDetails = ({ property }) => {
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     {propertyDetails?.images?.length ? (
                         propertyDetails?.images?.map((image, index) => (
-                            <div onClick={handleImagePress} className='image-container'>
+                            <div
+                                onClick={handleImagePress}
+                                className="image-container"
+                            >
                                 <CardMedia
                                     key={index}
                                     component="img"
@@ -163,7 +166,10 @@ const PropertyDetails = ({ property }) => {
                             </div>
                         ))
                     ) : (
-                        <div onClick={handleImagePress} className='image-container'>
+                        <div
+                            onClick={handleImagePress}
+                            className="image-container"
+                        >
                             <CardMedia
                                 key={`default~1`}
                                 component="img"

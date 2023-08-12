@@ -4,6 +4,8 @@ import Notification from './Notificaiton'
 import { useMoralis } from 'react-moralis'
 import propertyService from '../services/property'
 import formatPrice from '../utils/priceFormatter.js'
+import Button from '@mui/material/Button'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { usdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
@@ -22,7 +24,7 @@ const PropertyForm = ({ handleClose }) => {
     })
     const [errors, setErrors] = useState({})
 
-    const addProperty = AddProperty((ethToWei(ethPrice)))
+    const addProperty = AddProperty(ethToWei(ethPrice))
 
     const getNextPropertyId = GetNextPropertyId()
 
@@ -35,11 +37,22 @@ const PropertyForm = ({ handleClose }) => {
     }, [isWeb3Enabled])
 
     const handleImageChange = (event) => {
+        if (images.length >= 3) {
+            alert('You can only upload 3 images')
+            return
+        }
         const files = event.target.files
         const imageArray = [...images]
-        for (let i = 0; i < files.length && i < 2; i++) {
+        for (let i = 0; i < files.length && i < 3; i++) {
             imageArray.push(files[i])
         }
+        setImages(imageArray)
+    }
+
+    const handleDeleteImage = (image) => {
+        const imageArray = [...images]
+        const index = imageArray.indexOf(image)
+        imageArray.splice(index, 1)
         setImages(imageArray)
     }
 
@@ -49,7 +62,9 @@ const PropertyForm = ({ handleClose }) => {
         setSubmitting(true)
         e.preventDefault()
         try {
-            await propertyFormValidation.validate(formValues,  { abortEarly: false })
+            await propertyFormValidation.validate(formValues, {
+                abortEarly: false,
+            })
             setErrors({})
         } catch (validationErrors) {
             const errors = {}
@@ -62,12 +77,14 @@ const PropertyForm = ({ handleClose }) => {
         }
 
         try {
-            const formattedPrice = `${parseInt(formValues.price.replace(/[^0-9.]/g, ''))}`
+            const formattedPrice = `${parseInt(
+                formValues.price.replace(/[^0-9.]/g, '')
+            )}`
             const eth = await usdToEth(formattedPrice)
             const price = {
                 usd: formattedPrice,
                 eth: eth.toString(),
-                wei: ethToWei(eth)
+                wei: ethToWei(eth),
             }
 
             const formData = new FormData()
@@ -80,9 +97,11 @@ const PropertyForm = ({ handleClose }) => {
             for (let i = 0; i < images.length; i++) {
                 formData.append('images', images[i])
             }
-            await propertyService.createProperty(formData)
             await addProperty({
-                onSuccess: handleSuccess,
+                onSuccess: async (tx) => {
+                    await propertyService.createProperty(formData)
+                    handleSuccess(tx)
+                },
                 onError: handleFailure,
             })
             handleClose()
@@ -104,12 +123,13 @@ const PropertyForm = ({ handleClose }) => {
 
     const handleBlur = async () => {
         if (!formValues.price) return
-        const ethers = await usdToEth(parseInt(formValues.price.replace(/[^0-9.]/g, '')))
+        const ethers = await usdToEth(
+            parseInt(formValues.price.replace(/[^0-9.]/g, ''))
+        )
         setEthPrice(ethers)
         const formattedPrice = formatPrice(formValues.price)
         setFormValues({ ...formValues, price: formattedPrice })
     }
-
 
     return (
         <div>
@@ -127,7 +147,6 @@ const PropertyForm = ({ handleClose }) => {
                         onChange={handleChange}
                         required
                     />
-
                 </div>
                 <div>
                     {/* <label htmlFor="price">Price:</label> */}
@@ -182,16 +201,55 @@ const PropertyForm = ({ handleClose }) => {
                     {images.length > 0 && (
                         <div>
                             <p>Selected Images:</p>
-                            <ul>
+                            <ul style={{ listStyleType: 'none', padding: 0 }}>
                                 {images.map((image) => (
-                                    <li key={image.name}>{image.name}</li>
+                                    <li
+                                        key={image.name}
+                                        style={{ marginBottom: '10px' }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                borderRadius: '5px',
+                                            }}
+                                        >
+                                            <span
+                                                style={{
+                                                    flex: 1,
+                                                    maxWidth: '70%',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {image.name}
+                                            </span>
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                startIcon={<DeleteIcon />}
+                                                onClick={() =>
+                                                    handleDeleteImage(image)
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                        </div>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
                     )}
                 </div>
-                <button className="login-button" type="submit" disabled={submitting}>
-          Submit
+                <button
+                    className="login-button"
+                    type="submit"
+                    disabled={submitting}
+                >
+                    Submit
                 </button>
             </form>
         </div>
