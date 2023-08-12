@@ -4,14 +4,16 @@ import Notification from './Notificaiton'
 import { useMoralis } from 'react-moralis'
 import propertyService from '../services/property'
 import formatPrice from '../utils/priceFormatter.js'
-import { UsdToEth, ethToWei } from '../utils/priceConversions.js'
+import { usdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
 const PropertyForm = ({ handleClose }) => {
     const { isWeb3Enabled, account } = useMoralis()
 
     const [images, setImages] = useState([])
+    const [submitting, setSubmitting] = useState(false)
     const [nextPropertyId, setNextPropertyId] = useState(0)
+    const [ethPrice, setEthPrice] = useState('0')
     const [formValues, setFormValues] = useState({
         title: '',
         price: '',
@@ -20,7 +22,7 @@ const PropertyForm = ({ handleClose }) => {
     })
     const [errors, setErrors] = useState({})
 
-    const addProperty = AddProperty(parseInt(formValues.price.replace(/[^0-9.]/g, '')))
+    const addProperty = AddProperty((ethToWei(ethPrice)))
 
     const getNextPropertyId = GetNextPropertyId()
 
@@ -44,6 +46,7 @@ const PropertyForm = ({ handleClose }) => {
     const { handleSuccess, handleFailure } = Notification()
 
     const handleSubmit = async (e) => {
+        setSubmitting(true)
         e.preventDefault()
         try {
             await propertyFormValidation.validate(formValues,  { abortEarly: false })
@@ -54,12 +57,13 @@ const PropertyForm = ({ handleClose }) => {
                 errors[error.path] = error.message
             })
             setErrors(errors)
+            setSubmitting(false)
             return
         }
 
         try {
             const formattedPrice = `${parseInt(formValues.price.replace(/[^0-9.]/g, ''))}`
-            const eth = await UsdToEth(formattedPrice)
+            const eth = await usdToEth(formattedPrice)
             const price = {
                 usd: formattedPrice,
                 eth: eth.toString(),
@@ -84,6 +88,8 @@ const PropertyForm = ({ handleClose }) => {
             handleClose()
         } catch (err) {
             alert(err)
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -96,8 +102,10 @@ const PropertyForm = ({ handleClose }) => {
         }))
     }
 
-    const handleBlur = () => {
+    const handleBlur = async () => {
         if (!formValues.price) return
+        const ethers = await usdToEth(parseInt(formValues.price.replace(/[^0-9.]/g, '')))
+        setEthPrice(ethers)
         const formattedPrice = formatPrice(formValues.price)
         setFormValues({ ...formValues, price: formattedPrice })
     }
@@ -182,7 +190,7 @@ const PropertyForm = ({ handleClose }) => {
                         </div>
                     )}
                 </div>
-                <button className="login-button" type="submit">
+                <button className="login-button" type="submit" disabled={submitting}>
           Submit
                 </button>
             </form>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { StateContext, DispatchContext } from './Dashboard'
-import { UsdToEth, ethToWei } from '../utils/priceConversions'
+import { weiToEth, ethToUsd } from '../utils/priceConversions'
 import formatPrice from '../utils/priceFormatter'
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
 import { ZERO_ADDRESS } from '../utils/Constants'
@@ -25,7 +25,7 @@ const PropertyDetails = ({ property }) => {
     const { handleSuccess, handleFailure } = Notification()
     const [propertyDetails, setPropertyDetails] = useState({})
     const [loading, setLoading] = useState(false)
-    const [ethPrice, setEthPrice] = useState(0)
+    const [usdPrice, setUsdPrice] = useState('0')
     const [openImageViewer, setOpenImageViewer] = useState(false)
 
     const getContractOwner = GetContractOwner()
@@ -89,9 +89,10 @@ const PropertyDetails = ({ property }) => {
 
     useEffect(() => {
         if (property?.price) {
-            UsdToEth(property?.price.toString()).then((eth) => {
-                setEthPrice(eth)
-            })
+           const eth = weiToEth(property.price.toString())
+           ethToUsd(eth).then((usd) => {
+                setUsdPrice(usd.toString())
+              })
         }
     }, [property?.price])
 
@@ -193,18 +194,18 @@ const PropertyDetails = ({ property }) => {
                             style={{ marginRight: '10px' }}
                         >
                             <span className="form-label">USD:</span>{' '}
-                            {formatPrice(property.price.toString())}
+                            {formatPrice(usdPrice)}
                         </Typography>
                         <Typography
                             variant="h5"
                             style={{ marginRight: '10px' }}
                         >
                             <span className="form-label">Ethers:</span>{' '}
-                            {ethPrice}
+                            {weiToEth(property.price.toString())}
                         </Typography>
                         <Typography variant="h5">
                             <span className="form-label">Wei:</span>{' '}
-                            {ethPrice ? ethToWei(ethPrice) : 0}
+                            {property.price.toString()}
                         </Typography>
                     </div>
                     <Typography variant="h5" style={{ margin: '10px 0' }}>

@@ -10,11 +10,12 @@ export const ethToWei = (eth) => {
     return web3.utils.toWei(stringEth, 'ether')
 }
 
-export const ethToUsd = (eth) => {
-    return ethToUsd(eth)
+export const ethToUsd = async (eth) => {
+    const exchangeRage = await getExchangeRate()
+    return eth * exchangeRage
 }
 
-export const UsdToEth = async (usd) => {
+export const usdToEth = async (usd) => {
     const exchangeRage = await getExchangeRate()
     return usd / exchangeRage
 }
