@@ -77,23 +77,11 @@ const PropertyForm = ({ handleClose }) => {
         }
 
         try {
-            const formattedPrice = `${parseInt(
-                formValues.price.replace(/[^0-9.]/g, '')
-            )}`
-            const eth = await usdToEth(formattedPrice)
-            const price = {
-                usd: formattedPrice,
-                eth: eth.toString(),
-                wei: ethToWei(eth),
-            }
-
             const formData = new FormData()
             formData.append('title', formValues.title)
-            formData.append('price', price)
             formData.append('description', formValues.description)
             formData.append('address', formValues.address)
             formData.append('propertyId', nextPropertyId.toString())
-            formData.append('propertyOwner', account)
             for (let i = 0; i < images.length; i++) {
                 formData.append('images', images[i])
             }
@@ -123,9 +111,7 @@ const PropertyForm = ({ handleClose }) => {
 
     const handleBlur = async () => {
         if (!formValues.price) return
-        const ethers = await usdToEth(
-            parseInt(formValues.price.replace(/[^0-9.]/g, ''))
-        )
+        const ethers = await usdToEth(formValues.price.replace(/[^0-9.]/g, ''))
         setEthPrice(ethers)
         const formattedPrice = formatPrice(formValues.price)
         setFormValues({ ...formValues, price: formattedPrice })

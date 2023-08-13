@@ -4,12 +4,14 @@ import { StateContext, DispatchContext } from './Dashboard'
 import PropertyDetails from './PropertyDetails'
 import { GetAllProperties } from '../contractServices/index.js'
 import { Button } from '@mui/material'
+import EmptyList from './EmptyList'
 import KeyboardArrowLeftRounded from '@mui/icons-material/KeyboardArrowLeftRounded'
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded'
 
 export default function LotteryEntrance() {
     const { isWeb3Enabled } = useMoralis()
     const state = useContext(StateContext)
+    const [loading, setLoading] = useState(true)
     const dispatch = useContext(DispatchContext)
 
     const [page, setPage] = useState(1)
@@ -19,13 +21,13 @@ export default function LotteryEntrance() {
 
     async function updateUIValues() {
         const properties = await getAllProperties()
-        setProperties(properties)
+        setProperties(properties || [])
         dispatch && dispatch({ type: 'reset' })
     }
 
     useEffect(() => {
         if (isWeb3Enabled) {
-            updateUIValues()
+            updateUIValues().then(() => setLoading(false))
         }
     }, [isWeb3Enabled])
 
@@ -35,7 +37,14 @@ export default function LotteryEntrance() {
         }
     }, [state?.dispatched])
 
-    return (
+    return loading ? (
+        <div className="loader--container">
+            Loading...
+        </div>
+    ) : (
+        properties.length === 0 ? (
+            <EmptyList />
+        ) :
         <div className="property-list--container">
             {properties.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails

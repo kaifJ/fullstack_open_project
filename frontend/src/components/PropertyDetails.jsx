@@ -96,6 +96,14 @@ const PropertyDetails = ({ property }) => {
         }
     }, [property?.price])
 
+    useEffect(() => {
+        propertyServices
+            .getPropertyById(property.propertyId.toString())
+            .then((_propertyDetails) => {
+                setPropertyDetails(_propertyDetails)
+            })
+    }, [property?.owner])
+
     const handleRequestTransfer = () => {
         requestTransfer({
             onSuccess: handleSuccess,
@@ -112,10 +120,22 @@ const PropertyDetails = ({ property }) => {
 
     const handleApproveTransferRequest = () => {
         approveTransferRequest({
-            onSuccess: handleSuccess,
+            onSuccess: (tx) => {
+                propertyServices.updatePropertyById(
+                    property.propertyId.toString(),
+                    { isPropertyForSale: false }
+                )
+                handleSuccess(tx)
+            },
             onError: handleFailure,
         })
     }
+
+    // const handlePublishForSale = () => {
+    //     propertyServices.updatePropertyById(property.propertyId.toString(), {
+    //         isPropertyForSale: true,
+    //     })
+    // }
 
     return loading ? (
         <div>Loading...</div>
@@ -150,6 +170,7 @@ const PropertyDetails = ({ property }) => {
                             <div
                                 onClick={handleImagePress}
                                 className="image-container"
+                                key={index}
                             >
                                 <CardMedia
                                     key={index}
@@ -171,11 +192,11 @@ const PropertyDetails = ({ property }) => {
                             className="image-container"
                         >
                             <CardMedia
-                                key={`default~1`}
+                                key={'default~1'}
                                 component="img"
                                 height="20%"
                                 image={'/uploads/default.png'}
-                                alt={`Default Image`}
+                                alt={'Default Image'}
                                 style={{
                                     objectFit: 'cover',
                                     width: '100%',
@@ -218,7 +239,8 @@ const PropertyDetails = ({ property }) => {
                         <span className="form-label">Address:</span>{' '}
                         {propertyDetails?.address}
                     </Typography>
-                    {isWeb3Enabled &&
+                    {propertyDetails.isPropertyForSale &&
+                        isWeb3Enabled &&
                         account?.toLowerCase() !==
                             ownerAddress?.toLowerCase() &&
                         propertyOwner !== account?.toLowerCase() &&
@@ -268,6 +290,20 @@ const PropertyDetails = ({ property }) => {
                                 Approve Transfer
                             </Button>
                         )}
+                    {/* {account.toLowerCase() === propertyOwner.toLowerCase() &&
+                        !propertyDetails.isPropertyForSale && (
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={handlePublishForSale}
+                                style={{
+                                    marginBottom: '10px',
+                                    marginRight: '10px',
+                                }}
+                            >
+                                Publish for sale
+                            </Button>
+                        )} */}
                 </CardContent>
             </Card>
         </div>

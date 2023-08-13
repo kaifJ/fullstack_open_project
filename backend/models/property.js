@@ -7,11 +7,6 @@ let propertySchema = new mongoose.Schema({
         minLength: 3,
     },
     description: String,
-    price: {
-        wei: String,
-        eth: String,
-        usd: String
-    },
     images: [{ path: String }],
     address: {
         type: String,
@@ -21,9 +16,8 @@ let propertySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    propertyOwner: {
-        type: String,
-        required: true,
+    isPropertyForSale: {
+        type: Boolean,
     }
 })
 
