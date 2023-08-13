@@ -1,0 +1,25 @@
+.header--container {
+    background-color: $dark-blue;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 4px;
+}
+
+.header--container--left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header--container--right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header--header1 {
+    color: $white;
+}

@@ -27,7 +27,7 @@ const Notification = () => {
     const handleNotificationFailure = (error) => {
         dispatch({
             type: 'failure',
-            title: 'Requested Successful',
+            title: 'Requested Failure',
             message: `${error.message || error[0]}`,
             position: 'topR',
         })

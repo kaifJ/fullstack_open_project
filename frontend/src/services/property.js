@@ -19,4 +19,13 @@ const getPropertyById = async (id) => {
     return response.data
 }
 
-export default { createProperty, getPropertyById }
+const updatePropertyById = async (id, formData) => {
+    const response = await axios.patch(`${baseUrl}/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+    return response.data
+}
+
+export default { createProperty, getPropertyById, updatePropertyById }

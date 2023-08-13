@@ -1,0 +1,34 @@
+.property-list--container {
+    background-color: $dark-gray;
+    height: '100%';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .page-navigator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+
+        button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.page--indicator {
+    color: $white;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.image-container {
+    cursor: pointer;
+    margin-right: 20px;
+}

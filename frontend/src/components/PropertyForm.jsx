@@ -3,13 +3,19 @@ import { AddProperty, GetNextPropertyId } from '../contractServices/index.js'
 import Notification from './Notificaiton'
 import { useMoralis } from 'react-moralis'
 import propertyService from '../services/property'
+import formatPrice from '../utils/priceFormatter.js'
+import Button from '@mui/material/Button'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { usdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
 const PropertyForm = ({ handleClose }) => {
-    const { isWeb3Enabled, account } = useMoralis()
+    const { isWeb3Enabled } = useMoralis()
 
     const [images, setImages] = useState([])
+    const [submitting, setSubmitting] = useState(false)
     const [nextPropertyId, setNextPropertyId] = useState(0)
+    const [ethPrice, setEthPrice] = useState('0')
     const [formValues, setFormValues] = useState({
         title: '',
         price: '',
@@ -18,7 +24,7 @@ const PropertyForm = ({ handleClose }) => {
     })
     const [errors, setErrors] = useState({})
 
-    const addProperty = AddProperty(formValues.price)
+    const addProperty = AddProperty(ethToWei(ethPrice))
 
     const getNextPropertyId = GetNextPropertyId()
 
@@ -31,20 +37,34 @@ const PropertyForm = ({ handleClose }) => {
     }, [isWeb3Enabled])
 
     const handleImageChange = (event) => {
+        if (images.length >= 3) {
+            alert('You can only upload 3 images')
+            return
+        }
         const files = event.target.files
         const imageArray = [...images]
-        for (let i = 0; i < files.length && i < 2; i++) {
+        for (let i = 0; i < files.length && i < 3; i++) {
             imageArray.push(files[i])
         }
+        setImages(imageArray)
+    }
+
+    const handleDeleteImage = (image) => {
+        const imageArray = [...images]
+        const index = imageArray.indexOf(image)
+        imageArray.splice(index, 1)
         setImages(imageArray)
     }
 
     const { handleSuccess, handleFailure } = Notification()
 
     const handleSubmit = async (e) => {
+        setSubmitting(true)
         e.preventDefault()
         try {
-            await propertyFormValidation.validate(formValues,  { abortEarly: false })
+            await propertyFormValidation.validate(formValues, {
+                abortEarly: false,
+            })
             setErrors({})
         } catch (validationErrors) {
             const errors = {}
@@ -52,36 +72,49 @@ const PropertyForm = ({ handleClose }) => {
                 errors[error.path] = error.message
             })
             setErrors(errors)
+            setSubmitting(false)
+            return
         }
 
         try {
             const formData = new FormData()
             formData.append('title', formValues.title)
-            formData.append('price', formValues.price)
             formData.append('description', formValues.description)
             formData.append('address', formValues.address)
             formData.append('propertyId', nextPropertyId.toString())
-            formData.append('propertyOwner', account)
             for (let i = 0; i < images.length; i++) {
                 formData.append('images', images[i])
             }
-            await propertyService.createProperty(formData)
             await addProperty({
-                onSuccess: handleSuccess,
+                onSuccess: async (tx) => {
+                    await propertyService.createProperty(formData)
+                    handleSuccess(tx)
+                },
                 onError: handleFailure,
             })
             handleClose()
         } catch (err) {
             alert(err)
+        } finally {
+            setSubmitting(false)
         }
     }
 
     const handleChange = (e) => {
         const { name, value } = e.target
+
         setFormValues((prevValues) => ({
             ...prevValues,
             [name]: value,
         }))
+    }
+
+    const handleBlur = async () => {
+        if (!formValues.price) return
+        const ethers = await usdToEth(formValues.price.replace(/[^0-9.]/g, ''))
+        setEthPrice(ethers)
+        const formattedPrice = formatPrice(formValues.price)
+        setFormValues({ ...formValues, price: formattedPrice })
     }
 
     return (
@@ -100,7 +133,6 @@ const PropertyForm = ({ handleClose }) => {
                         onChange={handleChange}
                         required
                     />
-
                 </div>
                 <div>
                     {/* <label htmlFor="price">Price:</label> */}
@@ -110,9 +142,10 @@ const PropertyForm = ({ handleClose }) => {
                         id="price"
                         name="price"
                         required
-                        placeholder="Price in wei *"
+                        placeholder="Price in USD *"
                         value={formValues.price}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                     />
                 </div>
                 <div>
@@ -154,16 +187,55 @@ const PropertyForm = ({ handleClose }) => {
                     {images.length > 0 && (
                         <div>
                             <p>Selected Images:</p>
-                            <ul>
+                            <ul style={{ listStyleType: 'none', padding: 0 }}>
                                 {images.map((image) => (
-                                    <li key={image.name}>{image.name}</li>
+                                    <li
+                                        key={image.name}
+                                        style={{ marginBottom: '10px' }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                borderRadius: '5px',
+                                            }}
+                                        >
+                                            <span
+                                                style={{
+                                                    flex: 1,
+                                                    maxWidth: '70%',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {image.name}
+                                            </span>
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                startIcon={<DeleteIcon />}
+                                                onClick={() =>
+                                                    handleDeleteImage(image)
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                        </div>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
                     )}
                 </div>
-                <button className="login-button" type="submit">
-          Submit
+                <button
+                    className="login-button"
+                    type="submit"
+                    disabled={submitting}
+                >
+                    Submit
                 </button>
             </form>
         </div>

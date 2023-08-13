@@ -3,7 +3,8 @@ import Header from './Header'
 import PropertyList from './PropertyList'
 import { useMoralis } from 'react-moralis'
 import PropertyForm from './PropertyForm'
-import { Modal, Box } from '@mui/material'
+import { Modal, Box, Button } from '@mui/material'
+import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork'
 import { GetContractOwner } from '../contractServices/index.js'
 import reducer from '../reduder'
 
@@ -39,9 +40,16 @@ const Dashboard = () => {
             {account &&
                 ownerAddress &&
                 account.toLowerCase() === ownerAddress && (
-                <button onClick={() => setIsModalOpen(true)}>
-                        Add Property
-                </button>
+                <div style={{ position: 'fixed', bottom: '30px', left: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Button
+                        variant="contained"
+                        size='large'
+                        onClick={() => setIsModalOpen(true)}>
+                        <AddHomeWorkIcon style={{ fontSize: '36px', color: 'white' }}/>
+                        {/* Add Property */}
+                    </Button>
+                </div>
+
             )}
             <StateContext.Provider value={state}>
                 <DispatchContext.Provider value={dispatch}>

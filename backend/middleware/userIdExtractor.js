@@ -7,7 +7,6 @@ const userExtractor = (request, response, next) => {
         const decodedToken = jwt.verify(token, process.env.SECRET)
 
         if (!decodedToken.id) {
-            console.log('here')
             next({
                 name: 'JsonWebTokenError',
                 message: 'invalid token'
