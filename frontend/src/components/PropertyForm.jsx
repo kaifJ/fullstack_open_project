@@ -10,7 +10,7 @@ import { usdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
 
 const PropertyForm = ({ handleClose }) => {
-    const { isWeb3Enabled, account } = useMoralis()
+    const { isWeb3Enabled } = useMoralis()
 
     const [images, setImages] = useState([])
     const [submitting, setSubmitting] = useState(false)

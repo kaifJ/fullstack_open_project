@@ -1,3 +1,4 @@
+// eslint-disable
 import { useMoralis } from 'react-moralis'
 import { useEffect, useState, useContext } from 'react'
 import { StateContext, DispatchContext } from './Dashboard'
@@ -38,13 +39,10 @@ export default function LotteryEntrance() {
     }, [state?.dispatched])
 
     return loading ? (
-        <div className="loader--container">
-            Loading...
-        </div>
+        <div className="loader--container">Loading...</div>
+    ) : properties.length === 0 ? (
+        <EmptyList />
     ) : (
-        properties.length === 0 ? (
-            <EmptyList />
-        ) :
         <div className="property-list--container">
             {properties.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails
