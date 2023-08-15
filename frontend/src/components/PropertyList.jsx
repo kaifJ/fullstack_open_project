@@ -33,6 +33,10 @@ export default function LotteryEntrance() {
     }, [isWeb3Enabled])
 
     useEffect(() => {
+        updateUIValues().then(() => setLoading(false))
+    }, [])
+
+    useEffect(() => {
         if (state?.dispatched) {
             updateUIValues()
         }
@@ -41,7 +45,7 @@ export default function LotteryEntrance() {
     return loading ? (
         <div className="loader--container">Loading...</div>
     ) : properties.length === 0 ? (
-        <EmptyList />
+        <EmptyList message={isWeb3Enabled ? 'Please connect to wallet': ''}/>
     ) : (
         <div className="property-list--container">
             {properties.slice(3 * (page - 1), 3 * page).map((property) => (
