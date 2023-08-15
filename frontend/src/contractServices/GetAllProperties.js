@@ -3,7 +3,7 @@ import { useMoralis, useWeb3Contract } from 'react-moralis'
 
 const GetAllProperties = () => {
     const { chainId: chainIdHex } = useMoralis()
-    const chainId = parseInt(chainIdHex)
+    const chainId = parseInt(chainIdHex || '31337')
     const propertyAddress =
         chainId in contractAddresses ? contractAddresses[chainId][0] : null
 

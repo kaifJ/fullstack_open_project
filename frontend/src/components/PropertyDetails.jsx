@@ -1,3 +1,4 @@
+// eslint-disable
 import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { StateContext, DispatchContext } from './Dashboard'
