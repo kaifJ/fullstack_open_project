@@ -6,6 +6,8 @@ import PropertyDetails from './PropertyDetails'
 import { GetAllProperties } from '../contractServices/index.js'
 import { Button } from '@mui/material'
 import EmptyList from './EmptyList'
+import filterHelper from '../utils/filterHelper'
+import FilterComponent from './Filter'
 import KeyboardArrowLeftRounded from '@mui/icons-material/KeyboardArrowLeftRounded'
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded'
 
@@ -14,9 +16,14 @@ export default function LotteryEntrance() {
     const state = useContext(StateContext)
     const [loading, setLoading] = useState(true)
     const dispatch = useContext(DispatchContext)
+    const [filters, setFilters] = useState({
+        price: 'neutral',
+        searchText: '',
+    })
 
     const [page, setPage] = useState(1)
     const [properties, setProperties] = useState([])
+    const [sortedList, setSortedList] = useState([])
 
     const getAllProperties = GetAllProperties()
 
@@ -33,28 +40,31 @@ export default function LotteryEntrance() {
     }, [isWeb3Enabled])
 
     useEffect(() => {
-        updateUIValues().then(() => setLoading(false))
-    }, [])
-
-    useEffect(() => {
         if (state?.dispatched) {
             updateUIValues()
         }
     }, [state?.dispatched])
 
+    useEffect(() => {
+        const sortedList = filterHelper([...properties], filters.price)
+        setSortedList(sortedList)
+    }, [filters.price, properties])
+
     return loading ? (
         <div className="loader--container">Loading...</div>
     ) : properties.length === 0 ? (
-        <EmptyList message={isWeb3Enabled ? 'Please connect to wallet': ''}/>
+        <EmptyList message={isWeb3Enabled ? '': 'Please connect to wallet'}/>
     ) : (
         <div className="property-list--container">
-            {properties.slice(3 * (page - 1), 3 * page).map((property) => (
+            <FilterComponent onFilter={setFilters} filters={filters}/>
+            {sortedList.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails
                     key={`${property.propertyId.toString()}~${property.price.toString()}`}
                     property={property}
+                    filters={filters}
                 />
             ))}
-            {properties.length > 3 && (
+            {sortedList.length > 3 && (
                 <div className="page-navigator">
                     <Button
                         onClick={() => setPage(page - 1)}
@@ -68,7 +78,7 @@ export default function LotteryEntrance() {
                     <span className="page--indicator">{page}</span>
                     <Button
                         onClick={() => setPage(page + 1)}
-                        disabled={page === Math.ceil(properties.length / 3)}
+                        disabled={page === Math.ceil(sortedList.length / 3)}
                     >
                         {' '}
                         <KeyboardArrowRightRounded
