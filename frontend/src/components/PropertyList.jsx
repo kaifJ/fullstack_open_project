@@ -52,11 +52,11 @@ export default function LotteryEntrance() {
 
     return loading ? (
         <div className="loader--container">Loading...</div>
-    ) : properties.length === 0 ? (
-        <EmptyList message={isWeb3Enabled ? '': 'Please connect to wallet'}/>
+    ) : properties.length === 0 || sortedList.length === 0 ? (
+        <EmptyList message={isWeb3Enabled ? '' : 'Please connect to wallet'} />
     ) : (
         <div className="property-list--container">
-            <FilterComponent onFilter={setFilters} filters={filters}/>
+            <FilterComponent onFilter={setFilters} filters={filters} />
             {sortedList.slice(3 * (page - 1), 3 * page).map((property) => (
                 <PropertyDetails
                     key={`${property.propertyId.toString()}~${property.price.toString()}`}

@@ -1,3 +1,4 @@
 build
 .eslintrc.js
 *.test.js
+*/src/components/PropertyDetails.jsx

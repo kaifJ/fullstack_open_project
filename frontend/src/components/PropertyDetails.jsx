@@ -1,4 +1,4 @@
-// eslint-disable
+//eslint-disable-entire-file
 import { useEffect, useState, useContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { StateContext, DispatchContext } from './Dashboard'
@@ -55,7 +55,6 @@ const PropertyDetails = ({ property, filters }) => {
     const handleModalClose = () => setOpenImageViewer(false)
     const handleImagePress = () => setOpenImageViewer(true)
     const handleInfoModalClose = () => setOpenInfoModal(false)
-    const handleInfoModalOpen = () => setOpenInfoModal(true)
 
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)

@@ -59,4 +59,5 @@ describe('User route testing', () => {
         await api.post('/api/users').send(newUser).expect(400)
     })
 
+    after(async () => await User.deleteMany({}));
 })

@@ -20,7 +20,7 @@ describe('Login route testing', () => {
         const response = await api.post('/api/login').send(user).expect(200);
         const responseObject = response.body;
         expect(responseObject.token).toBeDefined();
-        
+
     })
 
     test('login with email', async () => {
@@ -51,4 +51,6 @@ describe('Login route testing', () => {
 
         await api.post('/api/login').send(user).expect(401);
     })
+
+    after(async () => await User.deleteMany({}));
 });
