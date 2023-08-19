@@ -1,0 +1,38 @@
+name: Smart contract CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    env:
+      PORT: ${{secrets.PORT}}
+      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.2
+
+      - name: Install dependencies
+        working-directory: dappproperty
+        run: npm ci
+
+      - name: Lint code
+        working-directory: dappproperty
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: dappproperty
+        run: npm run test

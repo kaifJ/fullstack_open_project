@@ -13,7 +13,6 @@ contract PropertyOwnership {
     struct OwnershipTransferRequest {
         address requester;
         uint256 price;
-        uint256 timestamp;
     }
 
     struct PropertyDetails {
@@ -114,8 +113,7 @@ contract PropertyOwnership {
         // require(msg.value == price, "Please send the correct amount of Ether");
         transferRequests[propertyId] = OwnershipTransferRequest({
             requester: msg.sender,
-            price: msg.value,
-            timestamp: block.timestamp
+            price: msg.value
         });
 
         emit OwnershipTransferRequested(propertyId, msg.sender, msg.value);

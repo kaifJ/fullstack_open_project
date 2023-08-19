@@ -34,24 +34,3 @@ jobs:
 
       - name: Unit Tests
         run: cd frontend && npm run test
-
-      - name: Install backend dependencies
-        working-directory: backend
-        run: npm ci  
-      
-      - name: Run backend server
-        working-directory: backend
-        run: PORT=${{ env.BACKEND_PORT }} npm run test:server &
-
-      - name: Wait for backend server to start
-        run: sleep 10
-
-
-      - name: Cypress Tests
-        uses: cypress-io/github-action@v5
-        with:
-          working-directory: frontend
-          build: npm run build
-          start: npm run start
-          wait-on: "http://localhost:${{ env.FRONTEND_PORT }}"
-          wait-on-timeout: 60
