@@ -48,7 +48,7 @@ describe('Property route testing', () => {
             .field('address', validProperty.address)
             .field('propertyId', validProperty.propertyId)
             .field('isPropertyForSale', validProperty.isPropertyForSale)
-            .attach('images', '../uploads/default.png').expect(201);
+            .attach('images', './tests/default.png');
         const responseObject = response.body;
         const propertyId = responseObject.propertyId;
         await api.get(`/api/property/${propertyId}`).expect(200);
