@@ -4,7 +4,14 @@ import { useMoralis } from 'react-moralis'
 import { StateContext, DispatchContext } from './Dashboard'
 import { weiToEth, ethToUsd } from '../utils/priceConversions'
 import formatPrice from '../utils/priceFormatter'
-import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    Button,
+    Box,
+} from '@mui/material'
 import { ZERO_ADDRESS } from '../utils/Constants'
 import Notification from './Notificaiton'
 import {
@@ -17,8 +24,9 @@ import {
 } from '../contractServices/index.js'
 import propertyServices from '../services/property'
 import ImageViewer from './ImageViewer'
+import InfoModal from './InfoModal'
 
-const PropertyDetails = ({ property }) => {
+const PropertyDetails = ({ property, filters }) => {
     const { isWeb3Enabled, account } = useMoralis()
     const [ownerAddress, setOwnerAddress] = useState('')
     const [pendingRequest, setPendingRequest] = useState(false)
@@ -28,6 +36,8 @@ const PropertyDetails = ({ property }) => {
     const [loading, setLoading] = useState(false)
     const [usdPrice, setUsdPrice] = useState('0')
     const [openImageViewer, setOpenImageViewer] = useState(false)
+    const [shouldFilterOut, setShouldFilterOut] = useState(false)
+    const [openInfoModal, setOpenInfoModal] = useState(false)
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -44,6 +54,8 @@ const PropertyDetails = ({ property }) => {
 
     const handleModalClose = () => setOpenImageViewer(false)
     const handleImagePress = () => setOpenImageViewer(true)
+    const handleInfoModalClose = () => setOpenInfoModal(false)
+    const handleInfoModalOpen = () => setOpenInfoModal(true)
 
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)
@@ -105,6 +117,25 @@ const PropertyDetails = ({ property }) => {
             })
     }, [property?.owner])
 
+    useEffect(() => {
+        if (filters.searchText && filters.searchText.length > 0) {
+            if (
+                propertyDetails?.title
+                    ?.toLowerCase()
+                    .includes(filters.searchText.toLowerCase()) ||
+                propertyDetails?.description
+                    ?.toLowerCase()
+                    .includes(filters.searchText.toLowerCase())
+            ) {
+                setShouldFilterOut(false)
+            } else {
+                setShouldFilterOut(true)
+            }
+        } else {
+            setShouldFilterOut(false)
+        }
+    }, [filters])
+
     const handleRequestTransfer = () => {
         requestTransfer({
             onSuccess: handleSuccess,
@@ -132,6 +163,10 @@ const PropertyDetails = ({ property }) => {
         })
     }
 
+    const handleViewRequesterInfo = () => {
+        setOpenInfoModal(true)
+    }
+
     // const handlePublishForSale = () => {
     //     propertyServices.updatePropertyById(property.propertyId.toString(), {
     //         isPropertyForSale: true,
@@ -141,15 +176,21 @@ const PropertyDetails = ({ property }) => {
     return loading ? (
         <div>Loading...</div>
     ) : (
-        <div
+        <Box
             className="property-card"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '65%',
-            }}
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            width="65%"
+            height={shouldFilterOut ? '0px' : '100%'}
         >
+            {pendingRequest && (
+                <InfoModal
+                    isModalOpen={openInfoModal}
+                    handleClose={handleInfoModalClose}
+                    requesterInfo={pendingRequest}
+                />
+            )}
             {propertyDetails?.images && (
                 <ImageViewer
                     images={propertyDetails?.images}
@@ -158,14 +199,10 @@ const PropertyDetails = ({ property }) => {
                 />
             )}
             <Card style={{ width: '100%', marginTop: '20px' }}>
-                <Typography
-                    variant="h4"
-                    component="div"
-                    style={{ marginBottom: '10px' }}
-                >
+                <Typography variant="h4" component="div" mb={1} ml={2} mt={2}>
                     {propertyDetails?.title}
                 </Typography>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <Box display="flex" flexDirection="row" ml={2}>
                     {propertyDetails?.images?.length ? (
                         propertyDetails?.images?.map((image, index) => (
                             <div
@@ -206,7 +243,7 @@ const PropertyDetails = ({ property }) => {
                             />
                         </div>
                     )}
-                </div>
+                </Box>
                 <CardContent>
                     <Typography variant="h5" component="div">
                         <span className="form-label">Owner:</span>{' '}
@@ -217,17 +254,11 @@ const PropertyDetails = ({ property }) => {
                         {propertyDetails?.description}
                     </Typography>
                     <div className="details" style={{ margin: '10px 0' }}>
-                        <Typography
-                            variant="h5"
-                            style={{ marginRight: '10px' }}
-                        >
+                        <Typography variant="h5" mr={2}>
                             <span className="form-label">USD:</span>{' '}
                             {formatPrice(usdPrice)}
                         </Typography>
-                        <Typography
-                            variant="h5"
-                            style={{ marginRight: '10px' }}
-                        >
+                        <Typography variant="h5" mr={2}>
                             <span className="form-label">Ethers:</span>{' '}
                             {weiToEth(property.price.toString())}
                         </Typography>
@@ -250,10 +281,7 @@ const PropertyDetails = ({ property }) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleRequestTransfer}
-                                style={{
-                                    marginBottom: '10px',
-                                    marginRight: '10px',
-                                }}
+                                style={{ marginRight: '10px' }}
                             >
                                 Request Transfer
                             </Button>
@@ -268,10 +296,7 @@ const PropertyDetails = ({ property }) => {
                                 variant="contained"
                                 color="error"
                                 onClick={handleCancelTransferRequest}
-                                style={{
-                                    marginBottom: '10px',
-                                    marginRight: '10px',
-                                }}
+                                style={{ marginRight: '10px' }}
                             >
                                 Cancel Transfer Request
                             </Button>
@@ -283,12 +308,21 @@ const PropertyDetails = ({ property }) => {
                                 variant="contained"
                                 color="success"
                                 onClick={handleApproveTransferRequest}
-                                style={{
-                                    marginBottom: '10px',
-                                    marginRight: '10px',
-                                }}
+                                style={{ marginRight: '10px' }}
                             >
                                 Approve Transfer
+                            </Button>
+                        )}
+                    {pendingRequest &&
+                        account.toLowerCase() ===
+                            ownerAddress.toLowerCase() && (
+                            <Button
+                                variant="contained"
+                                color="info"
+                                onClick={handleViewRequesterInfo}
+                                style={{ marginRight: '10px' }}
+                            >
+                                View requester info
                             </Button>
                         )}
                     {/* {account.toLowerCase() === propertyOwner.toLowerCase() &&
@@ -307,7 +341,7 @@ const PropertyDetails = ({ property }) => {
                         )} */}
                 </CardContent>
             </Card>
-        </div>
+        </Box>
     )
 }
 

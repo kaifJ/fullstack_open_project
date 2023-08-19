@@ -17,5 +17,5 @@ export const ethToUsd = async (eth) => {
 
 export const usdToEth = async (usd) => {
     const exchangeRage = await getExchangeRate()
-    return usd / exchangeRage
+    return (usd / exchangeRage).toFixed(18).toString()
 }
