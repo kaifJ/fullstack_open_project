@@ -14,7 +14,7 @@ jobs:
     
     env:
       PORT: ${{secrets.PORT}}
-      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+      TEST_MONGODB_URI: ${{secrets.TEST_MONGODB_URI }}
 
     steps:
       - name: Checkout repository
@@ -27,12 +27,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: DAppProperty
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Lint code
         working-directory: DAppProperty
-        run: npm run lint
+        run: yarn run lint
 
       - name: Run tests
         working-directory: DAppProperty
-        run: npm run test
+        run: yarn run test
