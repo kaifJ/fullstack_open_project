@@ -2,7 +2,7 @@ const validProperty = {
     title: 'A valid property',
     description: 'A valid description',
     address: 'A valid address',
-    propertyId: 'A valid propertyId',
+    propertyId: '1',
     isPropertyForSale: true,
 }
 
@@ -10,7 +10,7 @@ const incompleteProperty = {
     title: '',
     description: 'A valid description',
     address: '',
-    propertyId: 'A valid propertyId',
+    propertyId: '1',
     isPropertyForSale: true,
 }
 
