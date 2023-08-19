@@ -52,5 +52,5 @@ describe('Login route testing', () => {
         await api.post('/api/login').send(user).expect(401);
     })
 
-    after(async () => await User.deleteMany({}));
+    afterAll(async () => await User.deleteMany({}));
 });

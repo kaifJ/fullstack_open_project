@@ -54,5 +54,5 @@ describe('Property route testing', () => {
         await api.get(`/api/property/${propertyId}`).expect(200);
     })
 
-    after(async () => await Property.deleteMany({}));
+    afterAll(async () => await Property.deleteMany({}));
 })
