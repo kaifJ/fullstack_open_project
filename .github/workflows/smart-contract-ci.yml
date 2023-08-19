@@ -26,13 +26,13 @@ jobs:
           node-version: 16.13.2
 
       - name: Install dependencies
-        working-directory: dappproperty
+        working-directory: DAppProperty
         run: npm ci
 
       - name: Lint code
-        working-directory: dappproperty
+        working-directory: DAppProperty
         run: npm run lint
 
       - name: Run tests
-        working-directory: dappproperty
+        working-directory: DAppProperty
         run: npm run test
