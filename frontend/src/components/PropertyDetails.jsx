@@ -24,6 +24,7 @@ import {
 } from '../contractServices/index.js'
 import propertyServices from '../services/property'
 import ImageViewer from './ImageViewer'
+import InfoModal from './InfoModal'
 
 const PropertyDetails = ({ property, filters }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -36,6 +37,7 @@ const PropertyDetails = ({ property, filters }) => {
     const [usdPrice, setUsdPrice] = useState('0')
     const [openImageViewer, setOpenImageViewer] = useState(false)
     const [shouldFilterOut, setShouldFilterOut] = useState(false)
+    const [openInfoModal, setOpenInfoModal] = useState(false)
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -52,6 +54,8 @@ const PropertyDetails = ({ property, filters }) => {
 
     const handleModalClose = () => setOpenImageViewer(false)
     const handleImagePress = () => setOpenImageViewer(true)
+    const handleInfoModalClose = () => setOpenInfoModal(false)
+    const handleInfoModalOpen = () => setOpenInfoModal(true)
 
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)
@@ -117,10 +121,10 @@ const PropertyDetails = ({ property, filters }) => {
         if (filters.searchText && filters.searchText.length > 0) {
             if (
                 propertyDetails?.title
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(filters.searchText.toLowerCase()) ||
                 propertyDetails?.description
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(filters.searchText.toLowerCase())
             ) {
                 setShouldFilterOut(false)
@@ -159,6 +163,10 @@ const PropertyDetails = ({ property, filters }) => {
         })
     }
 
+    const handleViewRequesterInfo = () => {
+        setOpenInfoModal(true)
+    }
+
     // const handlePublishForSale = () => {
     //     propertyServices.updatePropertyById(property.propertyId.toString(), {
     //         isPropertyForSale: true,
@@ -176,6 +184,13 @@ const PropertyDetails = ({ property, filters }) => {
             width="65%"
             height={shouldFilterOut ? '0px' : '100%'}
         >
+            {pendingRequest && (
+                <InfoModal
+                    isModalOpen={openInfoModal}
+                    handleClose={handleInfoModalClose}
+                    requesterInfo={pendingRequest}
+                />
+            )}
             {propertyDetails?.images && (
                 <ImageViewer
                     images={propertyDetails?.images}
@@ -266,8 +281,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleRequestTransfer}
-                                mb={2}
-                                mr={2}
+                                style={{ marginRight: '10px' }}
                             >
                                 Request Transfer
                             </Button>
@@ -282,8 +296,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="error"
                                 onClick={handleCancelTransferRequest}
-                                mb={2}
-                                mr={2}
+                                style={{ marginRight: '10px' }}
                             >
                                 Cancel Transfer Request
                             </Button>
@@ -295,10 +308,21 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="success"
                                 onClick={handleApproveTransferRequest}
-                                mb={2}
-                                mr={2}
+                                style={{ marginRight: '10px' }}
                             >
                                 Approve Transfer
+                            </Button>
+                        )}
+                    {pendingRequest &&
+                        account.toLowerCase() ===
+                            ownerAddress.toLowerCase() && (
+                            <Button
+                                variant="contained"
+                                color="info"
+                                onClick={handleViewRequesterInfo}
+                                style={{ marginRight: '10px' }}
+                            >
+                                View requester info
                             </Button>
                         )}
                     {/* {account.toLowerCase() === propertyOwner.toLowerCase() &&
