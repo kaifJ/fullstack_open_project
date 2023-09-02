@@ -44,7 +44,7 @@ const ImageViewer = ({ images, open, onClose }) => {
                         <ArrowLeftIcon fontSize="large" style={{ fontSize: '64px' }}/>
                     </Button>
                     <img
-                        src={images[currentImageIndex]['path']}
+                        src={images[currentImageIndex]?.['path']}
                         alt={`Image ${currentImageIndex + 1}`}
                         style={{
                             objectFit: 'cover',

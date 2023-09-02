@@ -192,7 +192,7 @@ const PropertyDetails = ({ property, filters }) => {
             )}
             {propertyDetails?.images && (
                 <ImageViewer
-                    images={propertyDetails?.images}
+                    images={propertyDetails?.images.length ? propertyDetails.images : [{ path: '/uploads/default.png' }]}
                     open={openImageViewer}
                     onClose={handleModalClose}
                 />
@@ -273,7 +273,7 @@ const PropertyDetails = ({ property, filters }) => {
                     {propertyDetails.isPropertyForSale &&
                         isWeb3Enabled &&
                         account?.toLowerCase() !==
-                            ownerAddress?.toLowerCase() &&
+                        ownerAddress?.toLowerCase() &&
                         propertyOwner !== account?.toLowerCase() &&
                         !pendingRequest && (
                             <Button
@@ -290,7 +290,7 @@ const PropertyDetails = ({ property, filters }) => {
                             account?.toLowerCase() ||
                             (pendingRequest &&
                                 account.toLowerCase() ===
-                                    ownerAddress.toLowerCase())) && (
+                                ownerAddress.toLowerCase())) && (
                             <Button
                                 variant="contained"
                                 color="error"
@@ -302,7 +302,7 @@ const PropertyDetails = ({ property, filters }) => {
                         )}
                     {pendingRequest &&
                         account.toLowerCase() ===
-                            ownerAddress.toLowerCase() && (
+                        ownerAddress.toLowerCase() && (
                             <Button
                                 variant="contained"
                                 color="success"
@@ -314,7 +314,7 @@ const PropertyDetails = ({ property, filters }) => {
                         )}
                     {pendingRequest &&
                         account.toLowerCase() ===
-                            ownerAddress.toLowerCase() && (
+                        ownerAddress.toLowerCase() && (
                             <Button
                                 variant="contained"
                                 color="info"

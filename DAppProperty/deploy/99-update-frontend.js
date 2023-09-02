@@ -7,8 +7,9 @@ const ABI_PATH = '../frontend/src/constants/abi.json'
 module.exports = async function () {
     if (process.env.UPDATE_FRONT_END) {
         console.log('Updating frontend ...')
-        updateContractAddresses()
-        updateAbi()
+        await updateContractAddresses()
+        await updateAbi()
+        console.log(' ... done')
     }
 }
 

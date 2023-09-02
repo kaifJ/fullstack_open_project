@@ -36,6 +36,8 @@ export default function LotteryEntrance() {
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUIValues().then(() => setLoading(false))
+        }else {
+            setTimeout(() => setLoading(false), 2000)
         }
     }, [isWeb3Enabled])
 
