@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
-    "start": "cross-env NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test:server": "cross=env NODE_ENV=test nodemon index.js",
+    "build:ui": "rm -rf build && cd ../frontend && rm -rf build && npm run build && cp -r build ../backend",
+    "deploy": "npm run build:ui && fly deploy",
     "lint": "eslint ."
   },
   "author": "kaif shahahusen jamadar",
@@ -29,6 +31,7 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.9",
     "cross-env": "^7.0.3",
     "eslint": "^8.43.0",
     "jest": "^29.5.0",
