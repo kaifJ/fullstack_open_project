@@ -3,9 +3,9 @@ name: Deploy to Fly.io
 on:
   workflow_run:
     workflows:
-      - "Backend Workflow"
-      - "Frontend Workflow"
-      - "Smart Contract Workflow"
+      - "Backend CI"
+      - "Frontend CI"
+      - "Smart contract CI"
     types:
       - completed
   push:
