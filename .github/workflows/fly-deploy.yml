@@ -2,12 +2,9 @@ name: Deploy to Fly.io
 
 on:
   workflow_run:
-    workflows: ["Backend CI", "Frontend CI", "Smart contract CI"]
+    workflows: ["Frontend CI"]
     types:
       - completed
-    concurrency: 
-      group: deploy
-      cancel-in-progress: true
 
 jobs:
   deploy:
