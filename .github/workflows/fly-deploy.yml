@@ -8,20 +8,17 @@ on:
       - "Smart contract CI"
     types:
       - completed
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
 
       - name: Deploy to Fly.io
         working-directory: ./backend
