@@ -102,9 +102,9 @@ const FilterComponent = ({ onFilter, filters }) => {
                 color="primary"
                 size="large"
                 sx={{
-                    backgroundColor: 'primary.main', // Use the primary color for background
+                    backgroundColor: 'primary.main',
                     '&:hover': {
-                        backgroundColor: 'primary.dark', // Darker color on hover
+                        backgroundColor: 'primary.dark',
                     },
                 }}
             >
