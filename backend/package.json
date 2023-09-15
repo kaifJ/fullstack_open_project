@@ -8,8 +8,8 @@
     "start": "NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test:server": "cross=env NODE_ENV=test nodemon index.js",
-    "build:ui": "rm -rf build && cd ../frontend && rm -rf build && rm -rf node_modules && export NODE_ENV=production && npm install && npm run build && cp -r build ../backend",
-    "deploy": "npm run build:ui && fly deploy",
+    "build:ui": "rm -rf build && cd ../frontend && rm -rf build && rm -rf node_modules && npm install && npm run build && cp -r build ../backend",
+    "deploy": "fly deploy",
     "lint": "eslint ."
   },
   "author": "kaif shahahusen jamadar",
