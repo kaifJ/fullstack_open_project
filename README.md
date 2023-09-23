@@ -1,7 +1,11 @@
-# Full stack open project
+# Full stack open project (Decentralized property )
 
 ## Description
 [Link to the deployed app](https://dapproperty.fly.dev/)
+
+**Note**: Requires Meta Mask extension. Create an account and switch to 'Sepolia' network.
+
+[MetaMask Tutorial for Beginners - How to Set Up MetaMask](https://www.youtube.com/watch?v=Af_lQ1zUnoM&ab_channel=MoneyZG)
 
 **Purpos and motivatione**: As Blockchain technology provides security, transparency, immutability and most of all decentralization it created a trustable source of information. The idea was to create a decentralized application that tracks property owners so that it cannot be forged or wrongfully claimed by any individual or an organization. The idea is to start with an organization let's say a government organization that ownes properties/apartments/land etc and is put to sale which can then be requested by other users to buy. Every transcation can be traced and the ownership of a particular property/apartment/land hence cannot be mutated in the blockchain.
 
@@ -18,18 +22,60 @@ The project is divided into three main parts:
 | :----: | :---: | :---------------- |
 | 13.6.  | 4     | Initial planning, creating todos, planning learning material for Blockchain and smart contracts, setting up github repo and initial commit.|
 | 28.6.  | 8     | Backend development, adding user api route, models and unit tests. Initial ci setup for backend |
-| 02.7.  | 4     | Backend: add login api, tests, and unit tests. Update the CI work flow for backend and frontend |
-| 03.7.  | 2     | Work on frontend ci workflow, trying to keep the pipeline green |
+| 02.7.  | 5     | Backend: add login api, tests, and unit tests. Update the CI work flow for backend and frontend |
+| 03.7.  | 3     | Work on frontend ci workflow, trying to keep the pipeline green |
 | 06.07.   | 4     | Refactor initial cypress tests, refactor users api, Add new Register component to the UI and add tests|
 | 15.07.   | 8     | Learning the basics of blockchain, remix, remix factory from the learning material given below.|
 | 16.07.   | 8     | Revising the learning material and learning furthermore about smart contract and solidity|
 | 22.07.   | 8     | Revising the learning materal and learning about hardhat to work with smart contracts.|
 | 23.07.   | 8     | Learning more about hardhat tool and learnign how to create, test, and deploy smart contracts. Furthermore, learning how the frontend can interact with the deployed smart contract.|
+| 24.07.   | 3     | Initial implementation of smart contract for the project|
 | 29.07.   | 8     | Learning how to build Full stack with hardhat and smart contracts.|
 | 30.07.   | 8     | Learning how to test the smart contarcts using hardhat, how to verify the deployed smart contracts, and pracising further.|
 | 31.07.   | 8     | Creating a design plan for the smart contarct and initial implementation started with respect to the project. Creation of smart contract and even writing of unit test|
 | 1.08.   | 8     | Building up on the initial implementation of the smart contract, adding further unit tests and pushing to github|
-| **Total**  | **28**    | |
+| 3.08.   | 5     | Frontend development|
+|    |      | Update Dashboard, Header, Implement List component to list the properties, Implement add Property form|
+|    |      | Update deploy script for smart contract deploy command|
+| 4.08.   | 9     | Frontend development and creating services for contract and client communication.|
+|    |      | Update Dashboard, Implement Property Details page, Notification component and Update Add Property Form|
+|    |      | Implement contract services that allow the frontned client to communicate and make requests with the smart contract|
+| 5.08.   | 3     | Update addProperty form, code refactoring|
+| 6.08.   | 9     | Update frontend and backend to support image upload.|
+|    |      | Update Property Model and Controller in the backend to support image updload. Add form validation|
+|    |      | Implement price converter helper methods to convert amount between, USD, ether and Wei|
+|    |      | Fix minor bugs and fix CI job errors such as lint jobs.|
+| 9.08.   | 2     | frontend: ui changes
+||| support wei, ether and USD|
+||| add price priceFormatter|
+||| update form validation||
+| 11.08.   | 2     | frontend: Update styling|
+| 12.08.   | 8     | Bug fixes, adding new features to image uploading process.|
+|    |      | Fix price conversion bug fixes, required extensive debugging to figure out the issue|
+|    |      | Add at the max 3 image support. Add navigation for the image viewer and Delete image button|
+| 13.08.   | 9     | Add Empty list component|
+|    |      | Update contract services and necessary changes accordingly in the components.|
+|    |      | Fix eslint errors|
+|    |      | Initial implemenation for filters (did not push to GitHub)|
+| 19.08.   | 10     | Property List Filter component and fix price conversion bugs|
+|    |      | Add Info Modal component|
+|    |      | Add unit tests for Property Route in the backend|
+|    |      | Add Smart contrct CI workflow, and updating to keep it green.|
+| 02.09.   | 2     | Debugging and fixing minor bugs|
+| 08.09.   | 5     | Deploying to fly.io|
+|    |      | Encountered various bugs while deploying.|
+| 13.09.   | 6     | Setting up CD workflow using GitHub actions.|
+|    |      | Add unit tests to test a few frontend components.|
+|    |      | Encountered various bugs while setting up CI/CD for the entire project.|
+| 15.09.   | 2     | Keeping the pipeline green|
+| 17.09.   | 6     | Updating the README.md file|
+|    |      | Making the demo video and editing|
+|    |      | Manual testing and writing development guide.|
+| 23.09.   | 6     | Updating the README.md file|
+|    |      | Fix production bugs that were missed in development, remove inline styling|
+|    |      | Code refactoring|
+
+| **Total**  | **175**    | |
 
 # Setting up the development environmet
 
@@ -65,12 +111,12 @@ UPDATE_FRONT_END=true
 > yarn install
 
 // deploy a local blockchain that generates 20 accounts
-> npm run node
+> yarn run node
 
 // please check other scripts in DAppProperty/package.json scripts.
 ```
 
-- In the MetaMask wallet create a network called hardhat-localhost with the RPC url given by running ```npm run node```
+- In the MetaMask wallet create a network called hardhat-localhost with the RPC url given by running ```yarn run node```
 - Use the Private key of first account displayed in the terminal by running the above command. This account will be the owner of the smart contract and hence will be the only account allowed to add the properties/apartment listing/land etc
 
 
@@ -90,7 +136,7 @@ TEST_MONGODB_URI='test mongodb uri'
 > yarn install
 
 // run the test server
-> npm run test:server
+> yarn run test:server
 ```
 
 ## 3. Setting up the frontend
@@ -108,28 +154,28 @@ TEST_MONGODB_URI='test mongodb uri'
 
 ```
 // to run the unit tests
-> npm run test
+> yarn run test
 
 // to check the test coverage
-> npm run coverage
+> yarn run coverage
 ```
 
 ### 2. Testing the backend
 - App the API's are tested using unit tests and can be found in backend/tests
 ```
 // to run the unit tests
-> npm run test
+> yarn run test
 ```
 
-### 3. Testing the backend
+### 3. Testing the frontend
 - Some of the components are tests using unit tests.
 ```
-> npm run test
+> yarn run test
 ```
 
 - End to end testing is only done for the Register user and login part
 ```
-> npm run cypress:open
+> yarn run cypress:open
 ```
 
 - End to end testing for the rest of the application becomes tricky as it involes interaction with the MetaMask extension. Initial reseach was done with 'Synpress' testing but was not successful. Will be done in the furture.
