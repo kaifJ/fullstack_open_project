@@ -1,16 +1,13 @@
 import React from 'react'
 import EmptyIcon from '@mui/icons-material/Inbox'
 import { Typography } from '@mui/material'
+import { emptyListStyles as styles } from '../styles'
 
 const EmptyListComponent = ({ message }) => {
     return (
-        <div style={{ textAlign: 'center', padding: '20px', marginTop: '20%' }}>
+        <div style={styles.empptyListStyles}>
             <EmptyIcon
-                style={{
-                    fontSize: '128px',
-                    marginBottom: '10px',
-                    color: '#ccc',
-                }}
+                style={styles.iconStyle}
             />
             <Typography variant="h3" color="textSecondary">
                 {message || 'No properties to show.'}

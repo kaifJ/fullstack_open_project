@@ -3,6 +3,7 @@ import formatPrice from '../utils/priceFormatter'
 import CloseIcon from '@mui/icons-material/Close'
 import { Modal, Box, Typography, Button } from '@mui/material'
 import { weiToEth, ethToUsd } from '../utils/priceConversions'
+import { infoModalStyles as styles } from '../styles'
 
 const InfoModal = ({ requesterInfo, isModalOpen, handleClose }) => {
     const [usdPrice, setUsdPrice] = useState('0')
@@ -29,7 +30,7 @@ const InfoModal = ({ requesterInfo, isModalOpen, handleClose }) => {
                     maxWidth: '80%',
                 }}
             >
-                <div style={{ position: 'absolute', top: '10px', right: '10px', marginBottom: '20px' }}>
+                <div style={styles.button}>
                     <Button onClick={handleClose} startIcon={<CloseIcon />} />
                 </div>
                 <Box mt={2}>
@@ -37,7 +38,7 @@ const InfoModal = ({ requesterInfo, isModalOpen, handleClose }) => {
                         <span className="form-label">Requester: </span>{' '}
                         {requesterInfo.requester}
                     </Typography>
-                    <Box className="details" style={{ margin: '10px 0' }}>
+                    <Box className="details" style={styles.typographyStyle}>
                         <Typography variant="h5" mr={2}>
                             <span className="form-label">USD:</span>{' '}
                             {formatPrice(usdPrice)}

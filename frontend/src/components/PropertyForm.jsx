@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { usdToEth, ethToWei } from '../utils/priceConversions.js'
 import { propertyFormValidation } from '../Validations/propertyFormValidation'
+import { propertyFormStyles as styles } from '../styles/index.js'
 
 const PropertyForm = ({ handleClose }) => {
     const { isWeb3Enabled } = useMoralis()
@@ -56,7 +57,8 @@ const PropertyForm = ({ handleClose }) => {
         setImages(imageArray)
     }
 
-    const { handleSuccess, handleFailure, handleConformRequest } = Notification()
+    const { handleSuccess, handleFailure, handleConformRequest } =
+        Notification()
 
     const handleSubmit = async (e) => {
         setSubmitting(true)
@@ -188,29 +190,14 @@ const PropertyForm = ({ handleClose }) => {
                     {images.length > 0 && (
                         <div>
                             <p>Selected Images:</p>
-                            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                            <ul style={styles.imageListContainer}>
                                 {images.map((image) => (
                                     <li
                                         key={image.name}
-                                        style={{ marginBottom: '10px' }}
+                                        style={styles.imageListItem}
                                     >
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                borderRadius: '5px',
-                                            }}
-                                        >
-                                            <span
-                                                style={{
-                                                    flex: 1,
-                                                    maxWidth: '70%',
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis',
-                                                }}
-                                            >
+                                        <div style={styles.imageContainer}>
+                                            <span style={styles.imageSpan}>
                                                 {image.name}
                                             </span>
                                             <Button

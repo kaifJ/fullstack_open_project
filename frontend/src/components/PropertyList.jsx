@@ -10,6 +10,7 @@ import filterHelper from '../utils/filterHelper'
 import FilterComponent from './Filter'
 import KeyboardArrowLeftRounded from '@mui/icons-material/KeyboardArrowLeftRounded'
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded'
+import { propertyListStyles as styles } from '../styles'
 
 export default function Propertylist() {
     const { isWeb3Enabled, chainId: chainIdHex } = useMoralis()
@@ -79,7 +80,7 @@ export default function Propertylist() {
                     >
                         {' '}
                         <KeyboardArrowLeftRounded
-                            style={{ fontSize: '20px' }}
+                            style={styles.iconStyle}
                         />{' '}
                     </Button>
                     <span className="page--indicator">{page}</span>
@@ -89,7 +90,7 @@ export default function Propertylist() {
                     >
                         {' '}
                         <KeyboardArrowRightRounded
-                            style={{ fontSize: '20px' }}
+                            style={styles.iconStyle}
                         />{' '}
                     </Button>
                 </div>

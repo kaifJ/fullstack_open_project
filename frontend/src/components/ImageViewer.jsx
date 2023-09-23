@@ -3,6 +3,7 @@ import { Modal, Box, Button } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import { imageViewerStyles as styles } from '../styles'
 
 const ImageViewer = ({ images, open, onClose }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -36,26 +37,21 @@ const ImageViewer = ({ images, open, onClose }) => {
                     flexDirection: 'column',
                 }}
             >
-                <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-                    <Button onClick={onClose} startIcon={<CloseIcon style={{ fontSize: '32px' }}/>} />
+                <div style={styles.buttonContainer}>
+                    <Button onClick={onClose} startIcon={<CloseIcon style={styles.closeIconStyle}/>} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                <div style={styles.iconContainer}>
                     <Button onClick={handlePrevImage} disabled={currentImageIndex === 0}>
-                        <ArrowLeftIcon fontSize="large" style={{ fontSize: '64px' }}/>
+                        <ArrowLeftIcon fontSize="large" style={styles.iconStyle}/>
                     </Button>
                     <img
                         src={images[currentImageIndex]?.['path']}
                         alt={`Image ${currentImageIndex + 1}`}
-                        style={{
-                            objectFit: 'cover',
-                            width: '90%',
-                            height: '90%',
-                            margin: '5px',
-                        }}
+                        style={styles.image}
                     />
 
                     <Button onClick={handleNextImage} disabled={currentImageIndex === images.length - 1}>
-                        <ArrowRightIcon fontSize="large" style={{ fontSize: '64px' }}/>
+                        <ArrowRightIcon fontSize="large" style={styles.iconStyle}/>
                     </Button>
                 </div>
             </Box>

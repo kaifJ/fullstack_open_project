@@ -7,6 +7,7 @@ import { Modal, Box, Button } from '@mui/material'
 import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork'
 import { GetContractOwner } from '../contractServices/index.js'
 import reducer from '../reduder'
+import { dashboardStyles as styles } from '../styles'
 
 export const StateContext = createContext(null)
 export const DispatchContext = createContext(null)
@@ -45,12 +46,12 @@ const Dashboard = () => {
             {account &&
                 ownerAddress &&
                 account.toLowerCase() === ownerAddress && (
-                <div style={{ position: 'fixed', bottom: '30px', left: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={styles.accountContainer}>
                     <Button
                         variant="contained"
                         size='large'
                         onClick={() => setIsModalOpen(true)}>
-                        <AddHomeWorkIcon style={{ fontSize: '36px', color: 'white' }}/>
+                        <AddHomeWorkIcon style={styles.addIcon}/>
                         {/* Add Property */}
                     </Button>
                 </div>

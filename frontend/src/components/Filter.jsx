@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import TextField from '@mui/material/TextField'
+import { filterStyles as styles } from '../styles'
 
 const MAX_SEARCH_LENGTH = 50
 
@@ -98,7 +99,7 @@ const FilterComponent = ({ onFilter, filters }) => {
         >
             <IconButton
                 onClick={handlePriceOrder}
-                style={{ borderRadius: 4, width: '20%', height: '5rem' }}
+                style={styles.iconButton}
                 color="primary"
                 size="large"
                 sx={{
@@ -114,10 +115,10 @@ const FilterComponent = ({ onFilter, filters }) => {
                     </Typography>
                 }
                 {priceOrder === 'ascending' && (
-                    <ArrowUpwardIcon style={{ color: 'white' }} />
+                    <ArrowUpwardIcon style={styles.iconColor} />
                 )}
                 {priceOrder === 'descending' && (
-                    <ArrowDownwardIcon style={{ color: 'white' }} />
+                    <ArrowDownwardIcon style={styles.iconColor} />
                 )}
             </IconButton>
             <TextField
@@ -128,7 +129,7 @@ const FilterComponent = ({ onFilter, filters }) => {
                 size="large"
                 value={searchTitle}
                 onChange={handleSearchTextChange}
-                style={{ marginLeft: '3rem', width: '300px', backgroundColor: 'white', borderRadius: '4px', }}
+                style={styles.textField}
             />
             <Box ml={2} display="flex" flexDirection="row">
                 {renderChips().map((chip) => (

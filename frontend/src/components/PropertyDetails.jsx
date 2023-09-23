@@ -26,6 +26,7 @@ import {
 import propertyServices from '../services/property'
 import ImageViewer from './ImageViewer'
 import InfoModal from './InfoModal'
+import { propertyDetailsStyles as styles } from '../styles'
 
 const PropertyDetails = ({ property, filters }) => {
     const { isWeb3Enabled, account } = useMoralis()
@@ -206,9 +207,9 @@ const PropertyDetails = ({ property, filters }) => {
                     onClose={handleModalClose}
                 />
             )}
-            <Card style={{ width: '100%', marginTop: '20px' }}>
-                {error && <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <ErrorIcon color="error" style={{ marginRight: '8px', marginLeft: '10px' }} />
+            <Card style={styles.card}>
+                {error && <div style={styles.errorContainer}>
+                    <ErrorIcon color="error" style={styles.errorIcon} />
                     <Typography variant="h6" color="error">
                         {error}
                     </Typography>
@@ -230,11 +231,7 @@ const PropertyDetails = ({ property, filters }) => {
                                     height="180"
                                     image={image.path || '/uploads/default.png'}
                                     alt={`Image ${index + 1}`}
-                                    style={{
-                                        objectFit: 'cover',
-                                        width: '100%',
-                                        margin: '5px',
-                                    }}
+                                    style={styles.cardMedia}
                                 />
                             </div>
                         ))
@@ -249,11 +246,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 height="20%"
                                 image={'/uploads/default.png'}
                                 alt={'Default Image'}
-                                style={{
-                                    width: '50%',
-                                    height: '50%',
-                                    margin: '5px',
-                                }}
+                                style={styles.cardMedaDefault}
                             />
                         </div>
                     )}
@@ -267,7 +260,7 @@ const PropertyDetails = ({ property, filters }) => {
                         <span className="form-label">Description:</span>{' '}
                         {propertyDetails?.description}
                     </Typography>
-                    <div className="details" style={{ margin: '10px 0' }}>
+                    <div className="details" style={styles.typographyUSD}>
                         <Typography variant="h5" mr={2}>
                             <span className="form-label">USD:</span>{' '}
                             {formatPrice(usdPrice)}
@@ -281,7 +274,7 @@ const PropertyDetails = ({ property, filters }) => {
                             {property.price.toString()}
                         </Typography>
                     </div>
-                    <Typography variant="h5" style={{ margin: '10px 0' }}>
+                    <Typography variant="h5" style={styles.typographyUSD}>
                         <span className="form-label">Address:</span>{' '}
                         {propertyDetails?.address}
                     </Typography>
@@ -295,7 +288,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleRequestTransfer}
-                                style={{ marginRight: '10px' }}
+                                style={styles.button}
                             >
                                 Request Transfer
                             </Button>
@@ -310,7 +303,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="error"
                                 onClick={handleCancelTransferRequest}
-                                style={{ marginRight: '10px' }}
+                                style={styles.button}
                             >
                                 Cancel Transfer Request
                             </Button>
@@ -322,7 +315,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="success"
                                 onClick={handleApproveTransferRequest}
-                                style={{ marginRight: '10px' }}
+                                style={styles.button}
                             >
                                 Approve Transfer
                             </Button>
@@ -334,7 +327,7 @@ const PropertyDetails = ({ property, filters }) => {
                                 variant="contained"
                                 color="info"
                                 onClick={handleViewRequesterInfo}
-                                style={{ marginRight: '10px' }}
+                                style={styles.button}
                             >
                                 View requester info
                             </Button>
