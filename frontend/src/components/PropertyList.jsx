@@ -11,10 +11,11 @@ import FilterComponent from './Filter'
 import KeyboardArrowLeftRounded from '@mui/icons-material/KeyboardArrowLeftRounded'
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded'
 
-export default function LotteryEntrance() {
-    const { isWeb3Enabled } = useMoralis()
+export default function Propertylist() {
+    const { isWeb3Enabled, chainId: chainIdHex } = useMoralis()
     const state = useContext(StateContext)
     const [loading, setLoading] = useState(true)
+    const [activeChainId, setActiveChainId] = useState(null)
     const dispatch = useContext(DispatchContext)
     const [filters, setFilters] = useState({
         price: 'neutral',
@@ -34,12 +35,16 @@ export default function LotteryEntrance() {
     }
 
     useEffect(() => {
+        if(chainIdHex) setActiveChainId(parseInt(chainIdHex))
+    },[chainIdHex])
+
+    useEffect(() => {
         if (isWeb3Enabled) {
             updateUIValues().then(() => setLoading(false))
         }else {
             setTimeout(() => setLoading(false), 2000)
         }
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, activeChainId])
 
     useEffect(() => {
         if (state?.dispatched) {

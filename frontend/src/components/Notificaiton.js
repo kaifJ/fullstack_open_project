@@ -33,9 +33,18 @@ const Notification = () => {
         })
     }
 
+    const handleConformRequest = () => {
+        dispatch({
+            type: 'success',
+            title: 'Request has been made',
+            position: 'topR',
+        })
+    }
+
     return {
         handleSuccess,
         handleFailure,
+        handleConformRequest,
     }
 }
 

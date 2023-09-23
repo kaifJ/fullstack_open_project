@@ -12,6 +12,7 @@ import {
     Button,
     Box,
 } from '@mui/material'
+import ErrorIcon from '@mui/icons-material/Error'
 import { ZERO_ADDRESS } from '../utils/Constants'
 import Notification from './Notificaiton'
 import {
@@ -38,6 +39,7 @@ const PropertyDetails = ({ property, filters }) => {
     const [openImageViewer, setOpenImageViewer] = useState(false)
     const [shouldFilterOut, setShouldFilterOut] = useState(false)
     const [openInfoModal, setOpenInfoModal] = useState(false)
+    const [error, setError] = useState('')
 
     const getContractOwner = GetContractOwner()
     const getPropertyOwner = GetPropertyOwner(property.propertyId)
@@ -63,8 +65,11 @@ const PropertyDetails = ({ property, filters }) => {
         propertyServices
             .getPropertyById(property.propertyId.toString())
             .then((_propertyDetails) => {
+                setError('')
                 setPropertyDetails(_propertyDetails)
                 setLoading(false)
+            }).catch(err => {
+                setError('Error fetching property details, please change the blockchain network or contact admin')
             })
 
         if (isWeb3Enabled) {
@@ -113,6 +118,8 @@ const PropertyDetails = ({ property, filters }) => {
             .getPropertyById(property.propertyId.toString())
             .then((_propertyDetails) => {
                 setPropertyDetails(_propertyDetails)
+            }).catch(err => {
+                setError('Error fetching property details, please change the blockchain network or contact admin')
             })
     }, [property?.owner])
 
@@ -155,7 +162,9 @@ const PropertyDetails = ({ property, filters }) => {
                 propertyServices.updatePropertyById(
                     property.propertyId.toString(),
                     { isPropertyForSale: false }
-                )
+                ).catch(err => {
+                    setError('Error fetching property details, please change the blockchain network or contact admin')
+                })
                 handleSuccess(tx)
             },
             onError: handleFailure,
@@ -198,6 +207,12 @@ const PropertyDetails = ({ property, filters }) => {
                 />
             )}
             <Card style={{ width: '100%', marginTop: '20px' }}>
+                {error && <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <ErrorIcon color="error" style={{ marginRight: '8px', marginLeft: '10px' }} />
+                    <Typography variant="h6" color="error">
+                        {error}
+                    </Typography>
+                </div>}
                 <Typography variant="h4" component="div" mb={1} ml={2} mt={2}>
                     {propertyDetails?.title}
                 </Typography>
@@ -235,8 +250,8 @@ const PropertyDetails = ({ property, filters }) => {
                                 image={'/uploads/default.png'}
                                 alt={'Default Image'}
                                 style={{
-                                    objectFit: 'cover',
-                                    width: '100%',
+                                    width: '50%',
+                                    height: '50%',
                                     margin: '5px',
                                 }}
                             />

@@ -56,7 +56,7 @@ const PropertyForm = ({ handleClose }) => {
         setImages(imageArray)
     }
 
-    const { handleSuccess, handleFailure } = Notification()
+    const { handleSuccess, handleFailure, handleConformRequest } = Notification()
 
     const handleSubmit = async (e) => {
         setSubmitting(true)
@@ -87,6 +87,7 @@ const PropertyForm = ({ handleClose }) => {
             }
             await addProperty({
                 onSuccess: async (tx) => {
+                    handleConformRequest(tx)
                     await propertyService.createProperty(formData)
                     handleSuccess(tx)
                 },

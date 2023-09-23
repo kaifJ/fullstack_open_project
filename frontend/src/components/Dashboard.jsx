@@ -12,9 +12,10 @@ export const StateContext = createContext(null)
 export const DispatchContext = createContext(null)
 
 const Dashboard = () => {
-    const { isWeb3Enabled, account } = useMoralis()
+    const { isWeb3Enabled, account, chainId: chainIdhex } = useMoralis()
     const [ownerAddress, setOwnerAddress] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [activeChainId, setChainId] = useState(null)
 
     const initialState = {
         dispatched: false,
@@ -25,12 +26,16 @@ const Dashboard = () => {
     const getContractOwner = GetContractOwner()
 
     useEffect(() => {
-        if (isWeb3Enabled) {
+        if (isWeb3Enabled && activeChainId) {
             getContractOwner().then((ownerAddress) => {
                 setOwnerAddress(ownerAddress.toLowerCase())
             })
         }
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, activeChainId])
+
+    useEffect(() => {
+        if(chainIdhex) setChainId(parseInt(chainIdhex))
+    },[chainIdhex])
 
     const handleClose = () => setIsModalOpen(false)
 
