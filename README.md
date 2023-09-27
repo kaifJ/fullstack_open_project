@@ -9,6 +9,13 @@
 
 **Purpos and motivatione**: As Blockchain technology provides security, transparency, immutability and most of all decentralization it created a trustable source of information. The idea was to create a decentralized application that tracks property owners so that it cannot be forged or wrongfully claimed by any individual or an organization. The idea is to start with an organization let's say a government organization that ownes properties/apartments/land etc and is put to sale which can then be requested by other users to buy. Every transcation can be traced and the ownership of a particular property/apartment/land hence cannot be mutated in the blockchain.
 
+# Application features
+
+- We start of with an entity that is the owner of the smart contract and is the only one that has the ability to add property for sale.
+- Any user who has a MetaMask id can request for the transfer of the property by sending a certain amount of ethers/wei/USD
+- The user who has requested the property can cancel the request at any time and the ethers will be gained back.
+- The owner of the contract can either choose to accept the transaction and transfer the property ownership or cancel the request.
+
 # Project Setup
 The project is divided into three main parts:
 
